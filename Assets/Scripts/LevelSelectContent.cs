@@ -9,30 +9,41 @@ using UnityEngine.UI;
 
 public class LevelSelectContent : MonoBehaviour
 {
+    [SerializeField] Menu menu;
+
     [SerializeField] private Transform levelContainer;
     [SerializeField] private GameObject levelButton;
-    [SerializeField] private int sidePadding;
-    [SerializeField] private int spacing;
 
     private IEnumerator Start()
     {
-        AsyncOperationHandle<IList<IResourceLocation>> handle = Addressables.LoadResourceLocationsAsync(typeof(LevelSO));
+        AsyncOperationHandle<IList<IResourceLocation>> handle =
+            Addressables.LoadResourceLocationsAsync("Level", typeof(LevelSO));
         yield return handle;
 
         int levelCount = handle.Result.Count;
         Addressables.Release(handle);
 
         var rect = levelContainer as RectTransform;
-        rect.GetComponent<GridLayoutGroup>().padding = new(sidePadding,sidePadding,30,30);
-        float sqr = (rect.rect.width - (2 * sidePadding) - (spacing * 4)) / 5f;
+        var g = rect.GetComponent<GridLayoutGroup>();
 
+        float totalWidth = rect.rect.width;
+        float padding = g.padding.left + g.padding.right;
+        float spacingX = g.spacing.x;
+        int columns = g.constraintCount;
+
+        float sqr = (totalWidth - (2 * padding) - (spacingX * 4)) / columns;
+        g.cellSize = new(sqr,sqr);
+        print(levelCount);
+
+        int currentSave = SaveStateHandler.GetMaxLevel();
         for (int i = 0; i < levelCount; i++)
         {
             GameObject ButtonGO = Instantiate(levelButton,levelContainer);
-            var l = ButtonGO.GetComponentInChildren<LayoutElement>();
-            l.minWidth = sqr;
-            l.minHeight= sqr;
-            ButtonGO.GetComponentInChildren<TextMeshProUGUI>().text = (i + 1).ToString();
+            string level = (i + 1).ToString();
+            ButtonGO.GetComponentInChildren<TextMeshProUGUI>().text = level;
+            ButtonGO.GetComponent<Button>().onClick.AddListener(() => menu.LevelButton(level));
+            if(i <= currentSave)
+                ButtonGO.GetComponent<CanvasGroup>().interactable = true;
         }
     }
 }

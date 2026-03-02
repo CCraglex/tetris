@@ -26,55 +26,45 @@ public class Menu : MonoBehaviour
     public RectTransform[] menuBlocks;
 
     public MenuUtility menuUtility;
+    private LevelUtility levelUtility;
+
 
     public void Start()
     {
         menuUtility = new();
         menuUtility.Instance = this;
         menuUtility.PlayMenuIntro();
+
+        levelUtility = new();
+        levelUtility.Instance = this;
     }
 
-    public async void ContinueButton()
+    public void LevelButton(string level)
     {
-        menuScreen.interactable = false;
-        loadingScreen.gameObject.SetActive(true);
-
-        await loadingScreen.DOFade(1,1.25f)
-            .AsyncWaitForCompletion();
-
-        menuScreen.alpha = 0;
-        gameScreen.alpha = 1;
-
-        await LevelLoader.LevelLoadingTask();
-
-        await loadingScreen.DOFade(0,1.25f)
-            .AsyncWaitForCompletion();
-        
-        loadingScreen.gameObject.SetActive(false);
+        levelUtility.OnLevelSelect(int.Parse(level));
     }
 
     public async void LevelSelectButton()
     {
-        menuScreen.interactable = false;
-        swapAnimation.gameObject.SetActive(true);
+        swapAnimation.DOFade(1,0.25f);
 
         await swapAnimation.DOFade(1,0.65f)
             .AsyncWaitForCompletion();
 
-        await Awaitable.WaitForSecondsAsync(1f);
+        await Awaitable.WaitForSecondsAsync(2f);
 
         menuScreen.alpha = 0;
+        menuScreen.blocksRaycasts = false;
+
         levelScreen.alpha = 1;
+        levelScreen.blocksRaycasts = true;
 
         await swapAnimation.DOFade(0,0.65f)
             .AsyncWaitForCompletion();
-        
-        swapAnimation.gameObject.SetActive(false);
     }
 
     public async void ShopButton()
     {
-        menuScreen.interactable = false;
         swapAnimation.gameObject.SetActive(true);
 
         await swapAnimation.DOFade(1,0.65f)
@@ -83,7 +73,10 @@ public class Menu : MonoBehaviour
         await Awaitable.WaitForSecondsAsync(1f);
 
         menuScreen.alpha = 0;
+        menuScreen.blocksRaycasts = false;
+
         shopScreen.alpha = 1;
+        shopScreen.blocksRaycasts = true;
 
         await swapAnimation.DOFade(0,0.65f)
             .AsyncWaitForCompletion();
@@ -93,7 +86,6 @@ public class Menu : MonoBehaviour
 
     public async void SettingsButton()
     {
-        menuScreen.interactable = false;
         swapAnimation.gameObject.SetActive(true);
 
         await swapAnimation.DOFade(1,0.65f)
@@ -102,7 +94,10 @@ public class Menu : MonoBehaviour
         await Awaitable.WaitForSecondsAsync(1f);
 
         menuScreen.alpha = 0;
+        menuScreen.blocksRaycasts = false;
+
         settingsScreen.alpha = 1;
+        settingsScreen.blocksRaycasts = true;
 
         await swapAnimation.DOFade(0,0.65f)
             .AsyncWaitForCompletion();
@@ -187,5 +182,32 @@ public class MenuUtility
 
         foreach (RectTransform item in Instance.menuBlocks)
             RandomYoyo(item);
+    }
+}
+
+public class LevelUtility
+{
+    public Menu Instance;
+
+    public async void OnLevelSelect(int Level)
+    {
+        Instance.loadingScreen.gameObject.SetActive(true);
+
+        await Instance.loadingScreen.DOFade(1,1.25f)
+            .AsyncWaitForCompletion();
+
+        Instance.levelScreen.alpha = 0;
+        Instance.levelScreen.blocksRaycasts = false;
+
+        Instance.gameScreen.alpha = 1;
+        Instance.gameScreen.blocksRaycasts = true;
+
+        await LevelLoader.LevelLoadingTask(Level);
+
+        await Instance.loadingScreen.DOFade(0,1.25f)
+            .AsyncWaitForCompletion();
+        
+        Instance.loadingScreen.gameObject.SetActive(false);
+        LevelLoader.PlayLevel(Level);
     }
 }

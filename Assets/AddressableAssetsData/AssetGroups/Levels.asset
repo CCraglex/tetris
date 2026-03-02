@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Address: Assets/Addressables/Levels
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Level
+    - default
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e3761ed83f06b0885b23c7ae3379e655
     m_Address: Level-1

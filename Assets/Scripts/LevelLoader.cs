@@ -65,13 +65,15 @@ public static class AssetLoader
 
 public static class LevelLoader
 {
-    public static async Task LevelLoadingTask()
+    public static async Task LevelLoadingTask(int level)
     {
-        int level = SaveStateHandler.GetCurrentLevel();
         var levelLoad = AssetLoader.LoadLevel(level);
         await levelLoad;
+    }
+
+    public static async void PlayLevel(int level)
+    {
         await LevelHandler.IntroLevel();
-        Debug.Log("Intro");
         LevelHandler.StartPlaying(level);
     }
 }

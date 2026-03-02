@@ -18,10 +18,9 @@ public static class SaveStateHandler
         }
             
     
-        else currentdata = new()
+        currentdata = new()
         {
             cash = 10,
-            currentLevel = 1,
             MaxLevel = 1,
             upg1Amount = 3,
             upg2Amount = 3,
@@ -35,20 +34,9 @@ public static class SaveStateHandler
         File.WriteAllText(Application.persistentDataPath + Path,parsedToJson);
     } 
 
-    public static int GetCurrentLevel()
-        => currentdata.currentLevel;
+    public static int GetMaxLevel()
+        => currentdata.MaxLevel;
     
-    public static int GetNextLevel()
-        => currentdata.currentLevel + 1;
-    
-    public static int GetPreviousLevel()
-        => currentdata.currentLevel - 1;
-    
-    public static void SetLevel(int newLevel)
-    {
-        currentdata.currentLevel = newLevel;
-        Save();
-    }
     public static void FinishLevel(){
         currentdata.MaxLevel += 1;
         Save();
@@ -72,7 +60,6 @@ public static class SaveStateHandler
 public class SaveData
 {
     public int cash;
-    public int currentLevel;
     public int MaxLevel;
 
     public int upg1Amount;
