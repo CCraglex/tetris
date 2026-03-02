@@ -1,0 +1,45 @@
+"filename", "language", "JSON", "C#", "XML", "UnityShader", "comment", "blank", "total"
+"/home/ke/Belgeler/Unity/ballphysics/Assembly-CSharp-Editor.csproj", "XML", 0, 0, 1526, 0, 1, 1, 1528
+"/home/ke/Belgeler/Unity/ballphysics/Assembly-CSharp.csproj", "XML", 0, 0, 1482, 0, 1, 1, 1484
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Editor/LevelEditor.cs", "C#", 0, 120, 0, 0, 4, 34, 158
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Editor/LevelSOEditor.cs", "C#", 0, 32, 0, 0, 0, 11, 43
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/AddressableLoader.cs", "C#", 0, 0, 0, 0, 0, 1, 1
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/GameManager.cs", "C#", 0, 41, 0, 0, 4, 9, 54
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/GameplayButtons.cs", "C#", 0, 13, 0, 0, 0, 6, 19
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/LevelCamera.cs", "C#", 0, 69, 0, 0, 0, 22, 91
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/LevelEngine.cs", "C#", 0, 38, 0, 0, 0, 10, 48
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/LevelHandler.cs", "C#", 0, 83, 0, 0, 1, 23, 107
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/LevelLoader.cs", "C#", 0, 51, 0, 0, 0, 12, 63
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/LevelSO.cs", "C#", 0, 90, 0, 0, 2, 22, 114
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/LevelSelectContent.cs", "C#", 0, 33, 0, 0, 0, 6, 39
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/LevelTextHandler.cs", "C#", 0, 51, 0, 0, 0, 12, 63
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/ParticleDust.cs", "C#", 0, 18, 0, 0, 1, 5, 24
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/Player.cs", "C#", 0, 74, 0, 0, 0, 17, 91
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/PlayerMovement.cs", "C#", 0, 120, 0, 0, 12, 30, 162
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/SaveInitializer.cs", "C#", 0, 6, 0, 0, 0, 1, 7
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/SaveStateHandler.cs", "C#", 0, 66, 0, 0, 0, 15, 81
+"/home/ke/Belgeler/Unity/ballphysics/Assets/Scripts/TilepackSO.cs", "C#", 0, 10, 0, 0, 0, 5, 15
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/SDFFunctions.hlsl", "UnityShader", 0, 0, 0, 130, 18, 31, 179
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_Bitmap-Custom-Atlas.shader", "UnityShader", 0, 0, 0, 113, 2, 31, 146
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_Bitmap-Mobile.shader", "UnityShader", 0, 0, 0, 123, 3, 30, 156
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader", "UnityShader", 0, 0, 0, 113, 2, 31, 146
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF Overlay.shader", "UnityShader", 0, 0, 0, 253, 4, 70, 327
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF SSD.shader", "UnityShader", 0, 0, 0, 253, 4, 65, 322
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Masking.shader", "UnityShader", 0, 0, 0, 198, 10, 51, 259
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader", "UnityShader", 0, 0, 0, 193, 8, 52, 253
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile SSD.shader", "UnityShader", 0, 0, 0, 82, 4, 21, 107
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile-2-Pass.shader", "UnityShader", 0, 0, 0, 290, 15, 85, 390
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader", "UnityShader", 0, 0, 0, 192, 8, 51, 251
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF-Surface-Mobile.shader", "UnityShader", 0, 0, 0, 104, 8, 28, 140
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF-Surface.shader", "UnityShader", 0, 0, 0, 123, 4, 33, 160
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_SDF.shader", "UnityShader", 0, 0, 0, 253, 4, 70, 327
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMP_Sprite.shader", "UnityShader", 0, 0, 0, 111, 0, 21, 132
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMPro.cginc", "UnityShader", 0, 0, 0, 63, 2, 20, 85
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMPro_Mobile.cginc", "UnityShader", 0, 0, 0, 129, 2, 35, 166
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc", "UnityShader", 0, 0, 0, 62, 6, 13, 81
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Shaders/TMPro_Surface.cginc", "UnityShader", 0, 0, 0, 75, 7, 18, 100
+"/home/ke/Belgeler/Unity/ballphysics/Assets/TextMesh Pro/Sprites/EmojiOne.json", "JSON", 155, 0, 0, 0, 0, 2, 157
+"/home/ke/Belgeler/Unity/ballphysics/Packages/manifest.json", "JSON", 58, 0, 0, 0, 0, 1, 59
+"/home/ke/Belgeler/Unity/ballphysics/Packages/packages-lock.json", "JSON", 633, 0, 0, 0, 0, 1, 634
+"/home/ke/Belgeler/Unity/ballphysics/ballphysics.slnx", "XML", 0, 0, 4, 0, 0, 1, 5
+"Total", "-", 846, 915, 3012, 2860, 137, 1004, 8774
