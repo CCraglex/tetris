@@ -17,14 +17,11 @@ public static class SaveStateHandler
                 currentdata = JsonUtility.FromJson<SaveData>(data);
         }
             
-    
         currentdata = new()
         {
             cash = 10,
             MaxLevel = 1,
             upg1Amount = 3,
-            upg2Amount = 3,
-            upg3Amount = 3  
         };
     }
 
@@ -54,6 +51,15 @@ public static class SaveStateHandler
     }
     public static bool HasCash(int amount)
         => currentdata.cash >= amount;
+    
+    public static bool HasPowerup()
+        => currentdata.upg1Amount > 0;
+    
+    public static void UsePowerup()
+    {
+        currentdata.upg1Amount -= 1;
+        Save();
+    }
 }
 
 [System.Serializable]
@@ -61,8 +67,5 @@ public class SaveData
 {
     public int cash;
     public int MaxLevel;
-
     public int upg1Amount;
-    public int upg2Amount;
-    public int upg3Amount;
 }

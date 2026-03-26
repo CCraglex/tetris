@@ -9,8 +9,7 @@ public class CrushedTileGenerator : MonoBehaviour
     [SerializeField] private GameObject tileObjPrefab;
     [SerializeField] private Transform parentForGenTiles;
 
-    private void Awake()
-        =>  LevelHandler.tileAnimator = this;
+    private void Awake() {}
 
     public void CreateFakeTileAt(Tilemap map,Vector3Int tilePos)
     {

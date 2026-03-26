@@ -17045,6 +17045,7 @@ Transform:
   - {fileID: 1812043876}
   - {fileID: 1910914859}
   - {fileID: 1185216885}
+  - {fileID: 1220039821}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1156716362
@@ -17452,6 +17453,91 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1218389894}
   m_CullTransparentMesh: 1
+--- !u!1 &1220039820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1220039821}
+  - component: {fileID: 1220039824}
+  - component: {fileID: 1220039823}
+  - component: {fileID: 1220039822}
+  m_Layer: 0
+  m_Name: LevelHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1220039821
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220039820}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1156716361}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1220039822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220039820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b30654e100dfddbeb44fecdac696a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelCollisionHandler
+  playerTiles: []
+  wallGridPositions: []
+  flagGridPositions: []
+--- !u!114 &1220039823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220039820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad64394f7176684458423deba544523d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelGameplay
+  isPowerUpOn: 0
+  powerupTimer: 4
+  collisionHandler: {fileID: 1220039822}
+  levelText: {fileID: 1228757967}
+  player: {fileID: 1320266356}
+  levelCamera: {fileID: 519420033}
+--- !u!114 &1220039824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220039820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4f69ddf95fed247f940c76b12c90a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelLoadManager
+  Map: {fileID: 1149653108}
+  Player: {fileID: 1320266356}
+  levelTextHandler: {fileID: 1228757967}
+  cameraHandler: {fileID: 519420033}
+  levelGameplay: {fileID: 1220039823}
+  collisionHandler: {fileID: 1220039822}
 --- !u!1 &1228757963
 GameObject:
   m_ObjectHideFlags: 0
@@ -17603,6 +17689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelTextHandler
   moveTimer: 2
+  tickTimerMS: 0
 --- !u!1 &1230116941
 GameObject:
   m_ObjectHideFlags: 0
@@ -18420,6 +18507,8 @@ MonoBehaviour:
   movement: {fileID: 1320266357}
   tilePrefab: {fileID: 8580074231086937998, guid: 29e254aeb41627053aa85c1cf397cc01, type: 3}
   tileVisual: {fileID: -1605609553, guid: 51b08d8e06c8067fe960f380c63f9073, type: 3}
+  collisionHandler: {fileID: 0}
+  levelGameplay: {fileID: 0}
 --- !u!114 &1320266357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18433,6 +18522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   Active: 0
+  collisionHandler: {fileID: 0}
 --- !u!1 &1328430832
 GameObject:
   m_ObjectHideFlags: 0
@@ -22161,6 +22251,7 @@ MonoBehaviour:
   - {fileID: 551906745}
   - {fileID: 1073672606}
   - {fileID: 855296402}
+  levelLoader: {fileID: 0}
 --- !u!225 &1698566167
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -24111,6 +24202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aa43da42c73be879b54ac330721a7bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImmunityPowerup
+  levelGameplay: {fileID: 0}
   invincibilityTimer: 5
   indInv: {fileID: 6085534903743491803, guid: 6d577954e451993f8972e6eb8bd8f2ed, type: 3}
   borderImage: {fileID: 1790803016}

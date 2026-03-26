@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
 {
     public bool Active;
 
+    [SerializeField] private LevelCollisionHandler collisionHandler;
+
     private Transform Player;
     private Vector2Int[] playerTiles;
 
@@ -28,11 +30,13 @@ public class PlayerMovement : MonoBehaviour
             Mathf.RoundToInt(Player.position.y)
         );
 
-        var Walls = LevelHandler.GetWalls();
+        if(collisionHandler.IsCollidingWith(CollisionTileType.Wall,transform.position))
+            return false;
+        
         foreach (var tile in tiles)
         {
             Vector2Int pos = playerPos + tile + direction;               
-            if (Walls.Contains(pos) || IsTileOutOfBounds(pos.x))
+            if (IsTileOutOfBounds(pos.x))
                 return false;
         }
         return true;
@@ -122,7 +126,7 @@ public class PlayerMovement : MonoBehaviour
         transform.position += new Vector3(kickDir.x,kickDir.y,0);
         transform.Rotate(0, 0, 90);       
         playerTiles = rotatedTiles;
-        LevelHandler.playerTiles = playerTiles.ToList();
+        collisionHandler.playerTiles = playerTiles.ToList();
     }
 
     public void RotateRight()
@@ -137,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
         transform.Rotate(0, 0, -90);
         transform.position += new Vector3(kickDir.x,kickDir.y,0);
         playerTiles = rotatedTiles;
-        LevelHandler.playerTiles = playerTiles.ToList();
+        collisionHandler.playerTiles = playerTiles.ToList();
     }
 
     static readonly Vector2Int[] DefaultKicks =

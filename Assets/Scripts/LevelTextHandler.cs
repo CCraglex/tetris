@@ -8,17 +8,17 @@ public class LevelTextHandler : MonoBehaviour
     private TextMeshProUGUI text;
     private Vector2 StartPos;
     const float moveDistance = 1920 / 2 + 300 ;
-    [SerializeField] float moveTimer;
+    [SerializeField] private float moveTimer;
+    [SerializeField] private int tickTimerMS;
 
     private void Awake()
     {
-        LevelHandler.levelTextHandler = this;
         text = GetComponent<TextMeshProUGUI>();
         var rect = transform as RectTransform;
         StartPos = rect.anchoredPosition;
     }
 
-    public void SetLevel(string newLevel)
+    public void SetLevel(int newLevel)
     {
         var rect = transform as RectTransform;
         rect.anchoredPosition = StartPos;
@@ -55,7 +55,7 @@ public class LevelTextHandler : MonoBehaviour
         while(start > 0)
         {
             text.text = start.ToString();
-            await Task.Delay(LevelHandler.IntroTickTimer);
+            await Task.Delay(tickTimerMS);
             start -= 1;
         }
     }

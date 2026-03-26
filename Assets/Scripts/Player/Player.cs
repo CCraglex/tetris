@@ -12,6 +12,10 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private Sprite tileVisual;
 
+    [SerializeField] private LevelCollisionHandler collisionHandler;
+    [SerializeField] private LevelGameplay levelGameplay;
+
+
     private bool playerActed;
 
     private void CreateTile(Vector2 spot)
@@ -27,16 +31,17 @@ public class Player : MonoBehaviour
             Destroy(child.gameObject);
     }
 
-    public void GeneratePlayer()
+    public List<Vector2Int> GeneratePlayer()
     {
         ClearTiles();
         var Data = AssetLoader.GetCurrentLevel().GetPlayerTiles(out Vector2 spawn);
         transform.position = spawn;
         movement.InitTiles(Data);
-        LevelHandler.playerTiles = Data.ToList();
         CreateTile(Vector2.zero);
         for (int i = 0; i < Data.Length - 1; i++)
             CreateTile(Data[i]);
+        
+        return Data.ToList();
     }
 
     public void StartPlaying()
@@ -56,7 +61,7 @@ public class Player : MonoBehaviour
         
         while (movement.Active)
         {
-            if (LevelHandler.CanLandHere())
+            if (collisionHandler.CanLandHere(transform.position))
             {
                 lockTimer += Time.deltaTime;
 
@@ -68,12 +73,11 @@ public class Player : MonoBehaviour
 
                 if (lockTimer >= timePerStep)
                 {
-                    if(LevelHandler.HasLandedOnFlag())
-                        print("Win!");
+                    if(collisionHandler.IsCollidingWith(CollisionTileType.Flag,transform.position))
+                        levelGameplay.OnPlayerWon();
                     else
-                        print("Lose!");
+                        levelGameplay.OnPlayerDeath();
 
-                    movement.Active = false;
                     yield break;
                 }
 

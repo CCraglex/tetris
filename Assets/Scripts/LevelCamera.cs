@@ -19,11 +19,11 @@ public class LevelCamera : MonoBehaviour
 
     private float lowerLimit;
 
-    public void UpdateCameraStats(float boundX,float boundY)
+    public void UpdateCameraStats(LevelSO level)
     {
         transform.position = new Vector3(-0.5f,followTarget.position.y,-10) + Vector3.down * 3;
-        cam2D.orthographicSize = boundX * 0.5f / cam2D.aspect + 0.25f;
-        lowerLimit = -boundY + cam2D.orthographicSize;
+        cam2D.orthographicSize = level.GetWidth() * 0.5f / cam2D.aspect + 0.25f;
+        lowerLimit = -level.GetHeight() + cam2D.orthographicSize;
     }
 
     public void StartAction()

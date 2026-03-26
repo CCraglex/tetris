@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 public class Menu : MonoBehaviour
 {
+    [Header("Screens")]
     public CanvasGroup menuScreen;
     public CanvasGroup gameScreen;
     public CanvasGroup levelScreen;
@@ -15,6 +16,7 @@ public class Menu : MonoBehaviour
     public CanvasGroup loadingScreen;
     public CanvasGroup swapAnimation;
 
+    [Header("Buttons")]
     public RectTransform playButton;
     public RectTransform levelButton;
     public RectTransform shopButton;
@@ -25,8 +27,13 @@ public class Menu : MonoBehaviour
 
     public RectTransform[] menuBlocks;
 
+    [Header("Data")]
+
     public MenuUtility menuUtility;
     private LevelUtility levelUtility;
+
+    [Header("Components")]
+    public LevelLoadManager levelLoader;
 
 
     public void Start()
@@ -51,7 +58,7 @@ public class Menu : MonoBehaviour
         await swapAnimation.DOFade(1,0.65f)
             .AsyncWaitForCompletion();
 
-        await Awaitable.WaitForSecondsAsync(2f);
+        await Awaitable.WaitForSecondsAsync(0.75f);
 
         menuScreen.alpha = 0;
         menuScreen.blocksRaycasts = false;
@@ -202,12 +209,12 @@ public class LevelUtility
         Instance.gameScreen.alpha = 1;
         Instance.gameScreen.blocksRaycasts = true;
 
-        await LevelLoader.LevelLoadingTask(Level);
+        await Instance.levelLoader.CreateLevel(Level);
 
         await Instance.loadingScreen.DOFade(0,1.25f)
             .AsyncWaitForCompletion();
         
         Instance.loadingScreen.gameObject.SetActive(false);
-        LevelLoader.PlayLevel(Level);
+        Instance.levelLoader.ReadyLevel(Level);
     }
 }

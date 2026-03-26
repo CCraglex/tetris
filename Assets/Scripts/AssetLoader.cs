@@ -47,16 +47,15 @@ public static class AssetLoader
         }
     }
 
-    public static async Task LoadLevel(int Index)
+    public static async Task<LevelSO> LoadLevel(int Index)
     {
         UnloadLevelIfExists();
         levelHandle = Addressables.LoadAssetAsync<LevelSO>("Level-" + Index);
         await levelHandle.Task;
         
         currentLevel = levelHandle.Result;
-        await currentLevel.PlaceTiles(GameObject.FindFirstObjectByType<Tilemap>());
-        
-        LevelHandler.InitLevel(currentLevel);
+        return currentLevel;
+        //await currentLevel.PlaceTiles(GameObject.FindFirstObjectByType<Tilemap>());
     }
 
     public static LevelSO GetCurrentLevel()
@@ -69,11 +68,5 @@ public static class LevelLoader
     {
         var levelLoad = AssetLoader.LoadLevel(level);
         await levelLoad;
-    }
-
-    public static async void PlayLevel(int level)
-    {
-        await LevelHandler.IntroLevel();
-        LevelHandler.StartPlaying(level);
     }
 }

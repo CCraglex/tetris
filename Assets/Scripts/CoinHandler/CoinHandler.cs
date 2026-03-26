@@ -7,7 +7,11 @@ public class CoinInstance
 {
     public GameObject Instance;
     public bool Collected;
-    public Vector2 Position;
+
+    public Vector2 Position {
+        get => Instance.transform.position; 
+        set => Instance.transform.position = value;
+    }
 }
 
 public class CoinHandler : MonoBehaviour
@@ -41,6 +45,7 @@ public class CoinHandler : MonoBehaviour
     private void Awake()
     {
         CreateCoins();
+        ActiveCoins = new();
     }
 
     private void CreateCoins()
@@ -71,6 +76,8 @@ public class CoinHandler : MonoBehaviour
     public void SpawnCoins(int Amount,Tilemap Level)
     {
         List<Vector3Int> tiles = new();
+        print(Level == null);
+        
         var bounds = Level.cellBounds;
 
         foreach (var item in bounds.allPositionsWithin)
@@ -92,6 +99,9 @@ public class CoinHandler : MonoBehaviour
 
     private void ClearCoins()
     {
+        if(ActiveCoins.Count == 0)
+            return;
+
         foreach (var item in ActiveCoins)
         {
             item.Instance.SetActive(false);

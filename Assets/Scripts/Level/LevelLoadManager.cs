@@ -1,0 +1,42 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+public class LevelLoadManager : MonoBehaviour
+{
+    [SerializeField] Tilemap Map;
+    [SerializeField] Player Player;
+    [SerializeField] LevelTextHandler levelTextHandler;
+    
+    [SerializeField] LevelCamera cameraHandler;
+    [SerializeField] LevelGameplay levelGameplay;
+    [SerializeField] LevelCollisionHandler collisionHandler;
+
+    private LevelSO levelData;
+
+    public async Task CreateLevel(int levelID)
+    {   
+        levelData = await AssetLoader.LoadLevel(levelID);
+        await levelData.PlaceTiles(Map);
+
+        collisionHandler.SetupData(Player,levelData);
+        cameraHandler.UpdateCameraStats(levelData);
+        
+        int r = UnityEngine.Random.Range(5,10);
+        CoinHandler.GetCoinHandler().SpawnCoins(r,Map);
+    }
+
+    public void ReadyLevel(int levelID)
+        => levelGameplay.StartCoroutine(levelGameplay.StartPlayingLevel(levelID));
+
+    public static ImmunityPowerup powerupInstance;
+    public static CrushedTileGenerator tileAnimator;
+
+    public static bool Immune;
+    public static bool AllowedToPowerup;
+}
