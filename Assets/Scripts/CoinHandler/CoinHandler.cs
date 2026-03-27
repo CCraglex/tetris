@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -29,6 +30,10 @@ public class CoinHandler : MonoBehaviour
     [SerializeField] Transform coinsParent;
     [SerializeField] private TextMeshProUGUI textRenderer;
 
+    [SerializeField] private GameObject coinDeathAnim;
+    [SerializeField] private Transform deathAnimParent;
+
+
     private Queue<CoinInstance> Coins;
     [SerializeField] List<CoinInstance> ActiveCoins;
     
@@ -36,11 +41,22 @@ public class CoinHandler : MonoBehaviour
     {
         var v2Int = new Vector2Int((int)pos.x,(int)pos.y);
         var coin = ActiveCoins.FirstOrDefault(c => c.Position == v2Int);
-        print(coin + ", " + pos + ", " + v2Int);
         if(coin == null)
             return;
         
-        print(pos);
+        var r = coin.Instance.transform;
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(r.position);
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            deathAnimParent as RectTransform,
+            screenPos,
+            Camera.main,
+            out Vector2 localPos
+        );
+
+        GameObject uiObj = Instantiate(coinDeathAnim, deathAnimParent);
+        uiObj.GetComponent<RectTransform>().anchoredPosition = localPos;
+
         SaveStateHandler.AddCash(1);
         textRenderer.text = SaveStateHandler.GetCash().ToString();
         coin.Instance.SetActive(false);

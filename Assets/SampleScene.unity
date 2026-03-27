@@ -17184,6 +17184,9 @@ MonoBehaviour:
   coinPoolCount: 32
   coinsParent: {fileID: 1732587755}
   textRenderer: {fileID: 755883632}
+  coinDeathAnim: {fileID: 8912450674662511801, guid: 009872c79986c81aca6c8c621df47c60, type: 3}
+  deathAnimParent: {fileID: 882247393}
+  ActiveCoins: []
 --- !u!1 &1193888982
 GameObject:
   m_ObjectHideFlags: 0
