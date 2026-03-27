@@ -38,6 +38,9 @@ public static class SaveStateHandler
         currentdata.MaxLevel += 1;
         Save();
     }
+
+    public static int GetCash()
+        => currentdata.cash;
     
 
     public static void AddCash(int amount){

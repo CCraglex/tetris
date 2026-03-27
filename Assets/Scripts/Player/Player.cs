@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
     [SerializeField] private LevelCollisionHandler collisionHandler;
     [SerializeField] private LevelGameplay levelGameplay;
 
-
     private bool playerActed;
 
     private void CreateTile(Vector2 spot)
@@ -73,7 +72,7 @@ public class Player : MonoBehaviour
 
                 if (lockTimer >= timePerStep)
                 {
-                    if(collisionHandler.IsCollidingWith(CollisionTileType.Flag,transform.position))
+                    if(collisionHandler.IsCollidingWith(CollisionTileType.Flag,transform.position,out _))
                         levelGameplay.OnPlayerWon();
                     else
                         levelGameplay.OnPlayerDeath();

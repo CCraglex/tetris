@@ -55,7 +55,6 @@ public static class AssetLoader
         
         currentLevel = levelHandle.Result;
         return currentLevel;
-        //await currentLevel.PlaceTiles(GameObject.FindFirstObjectByType<Tilemap>());
     }
 
     public static LevelSO GetCurrentLevel()

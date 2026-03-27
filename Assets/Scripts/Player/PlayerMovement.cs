@@ -7,8 +7,10 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public bool Active;
+    public bool EnableDebug;
 
     [SerializeField] private LevelCollisionHandler collisionHandler;
+    [SerializeField] private CoinHandler coinHandler;
 
     private Transform Player;
     private Vector2Int[] playerTiles;
@@ -29,17 +31,26 @@ public class PlayerMovement : MonoBehaviour
             Mathf.RoundToInt(Player.position.x),
             Mathf.RoundToInt(Player.position.y)
         );
-
-        if(collisionHandler.IsCollidingWith(CollisionTileType.Wall,transform.position))
-            return false;
-        
+       
         foreach (var tile in tiles)
         {
-            Vector2Int pos = playerPos + tile + direction;               
-            if (IsTileOutOfBounds(pos.x))
+            Vector2Int pos = playerPos + tile + direction;        
+            if (collisionHandler.wallGridPositions.Contains(pos) || IsTileOutOfBounds(pos.x))
                 return false;
         }
         return true;
+    }
+
+    private void HandleCoinReward()
+    {
+        if(collisionHandler.IsCollidingWith(CollisionTileType.Coin,transform.position,out var positions))
+        {           
+            foreach (var p in positions)
+            {
+                print(p);
+                coinHandler.RewardCoin(p);
+            }
+        }
     }
 
     public bool IsTileOutOfBounds(int x)
@@ -50,10 +61,6 @@ public class PlayerMovement : MonoBehaviour
         int maxX = minX + width - 1;
 
         bool isOut = x < minX || x > maxX;
-
-        if (isOut)
-            Debug.Log($"{x} out of bounds [{minX}, {maxX}]");
-
         return isOut;
     }
 
@@ -70,18 +77,24 @@ public class PlayerMovement : MonoBehaviour
     {
         if(CanMoveDown())
             Player.position += Vector3.down;
+        
+        HandleCoinReward();
     }
         
     public void MoveLeft()
     {
         if(CanMoveLeft())
             Player.position += Vector3.left;
+        
+        HandleCoinReward();
     }
 
     public void MoveRight()
     {
         if(CanMoveRight())
             Player.position += Vector3.right;
+        
+        HandleCoinReward();
     }
 
     public bool CanRotateLeft(Vector2Int[] tiles,out Vector2Int kick)
@@ -151,16 +164,26 @@ public class PlayerMovement : MonoBehaviour
         new(-1, 0),  // left
         new(0, 1),   // up (floor kick)
     };
-    /*
+    
     public void OnDrawGizmos()
     {
+        if(EnableDebug == false)
+            return;
+
         Gizmos.color = Color.black;
         foreach (var item in playerTiles)
             Gizmos.DrawWireSphere(transform.position + new Vector3(item.x,item.y),0.25f);
 
         Gizmos.color = Color.red;
-        foreach (var item in LevelHandler.GetWalls())
+        foreach (var item in collisionHandler.wallGridPositions)
+            Gizmos.DrawWireSphere(new Vector3(item.x,item.y),0.25f);
+        
+        Gizmos.color = Color.yellow;
+        foreach (var item in collisionHandler.coinGridPositions)
+            Gizmos.DrawWireSphere(new Vector3(item.x,item.y),0.25f);
+
+        Gizmos.color = Color.green;
+        foreach (var item in collisionHandler.flagGridPositions)
             Gizmos.DrawWireSphere(new Vector3(item.x,item.y),0.25f);
     }
-    */
 }

@@ -17181,8 +17181,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinHandler
   CoinPrefab: {fileID: 8960856830181467548, guid: 6aaf0686bd1eb1c82a9ea130327f221a, type: 3}
-  coinPoolCount: 10
+  coinPoolCount: 32
   coinsParent: {fileID: 1732587755}
+  textRenderer: {fileID: 755883632}
 --- !u!1 &1193888982
 GameObject:
   m_ObjectHideFlags: 0
@@ -17502,6 +17503,7 @@ MonoBehaviour:
   playerTiles: []
   wallGridPositions: []
   flagGridPositions: []
+  coinGridPositions: []
 --- !u!114 &1220039823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17538,6 +17540,7 @@ MonoBehaviour:
   cameraHandler: {fileID: 519420033}
   levelGameplay: {fileID: 1220039823}
   collisionHandler: {fileID: 1220039822}
+  coinHandler: {fileID: 1185216886}
 --- !u!1 &1228757963
 GameObject:
   m_ObjectHideFlags: 0
@@ -17689,7 +17692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelTextHandler
   moveTimer: 2
-  tickTimerMS: 0
+  tickTimer: 0.65
 --- !u!1 &1230116941
 GameObject:
   m_ObjectHideFlags: 0
@@ -18507,8 +18510,8 @@ MonoBehaviour:
   movement: {fileID: 1320266357}
   tilePrefab: {fileID: 8580074231086937998, guid: 29e254aeb41627053aa85c1cf397cc01, type: 3}
   tileVisual: {fileID: -1605609553, guid: 51b08d8e06c8067fe960f380c63f9073, type: 3}
-  collisionHandler: {fileID: 0}
-  levelGameplay: {fileID: 0}
+  collisionHandler: {fileID: 1220039822}
+  levelGameplay: {fileID: 1220039823}
 --- !u!114 &1320266357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18522,7 +18525,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   Active: 0
-  collisionHandler: {fileID: 0}
+  EnableDebug: 0
+  collisionHandler: {fileID: 1220039822}
+  coinHandler: {fileID: 1185216886}
 --- !u!1 &1328430832
 GameObject:
   m_ObjectHideFlags: 0
@@ -22251,7 +22256,7 @@ MonoBehaviour:
   - {fileID: 551906745}
   - {fileID: 1073672606}
   - {fileID: 855296402}
-  levelLoader: {fileID: 0}
+  levelLoader: {fileID: 1220039824}
 --- !u!225 &1698566167
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -33,7 +33,6 @@ public class LevelSelectContent : MonoBehaviour
 
         float sqr = (totalWidth - (2 * padding) - (spacingX * 4)) / columns;
         g.cellSize = new(sqr,sqr);
-        print(levelCount);
 
         int currentSave = SaveStateHandler.GetMaxLevel();
         for (int i = 0; i < levelCount; i++)

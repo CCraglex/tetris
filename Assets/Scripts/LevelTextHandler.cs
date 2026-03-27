@@ -9,7 +9,7 @@ public class LevelTextHandler : MonoBehaviour
     private Vector2 StartPos;
     const float moveDistance = 1920 / 2 + 300 ;
     [SerializeField] private float moveTimer;
-    [SerializeField] private int tickTimerMS;
+    [SerializeField] private float tickTimer;
 
     private void Awake()
     {
@@ -44,8 +44,9 @@ public class LevelTextHandler : MonoBehaviour
         rect.anchoredPosition = new(StartPos.x,StartPos.y + moveDistance);
     }
 
-    public async Task PlayBeginning()
+    public IEnumerator PlayBeginning()
     {
+        var t = new WaitForSeconds(tickTimer);
         var rect = transform as RectTransform;
         rect.anchoredPosition = StartPos;
 
@@ -55,7 +56,7 @@ public class LevelTextHandler : MonoBehaviour
         while(start > 0)
         {
             text.text = start.ToString();
-            await Task.Delay(tickTimerMS);
+            yield return t;
             start -= 1;
         }
     }

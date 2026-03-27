@@ -16,7 +16,7 @@ public class LevelLoadManager : MonoBehaviour
     [SerializeField] LevelCamera cameraHandler;
     [SerializeField] LevelGameplay levelGameplay;
     [SerializeField] LevelCollisionHandler collisionHandler;
-
+    [SerializeField] CoinHandler coinHandler;
     private LevelSO levelData;
 
     public async Task CreateLevel(int levelID)
@@ -26,9 +26,8 @@ public class LevelLoadManager : MonoBehaviour
 
         collisionHandler.SetupData(Player,levelData);
         cameraHandler.UpdateCameraStats(levelData);
-        
-        int r = UnityEngine.Random.Range(5,10);
-        CoinHandler.GetCoinHandler().SpawnCoins(r,Map);
+
+        collisionHandler.UpdateCoins(coinHandler.SpawnCoins(Map));
     }
 
     public void ReadyLevel(int levelID)

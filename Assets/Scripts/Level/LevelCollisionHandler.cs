@@ -15,6 +15,7 @@ public class LevelCollisionHandler : MonoBehaviour
     public List<Vector2Int> playerTiles;
     public List<Vector2Int> wallGridPositions;
     public List<Vector2Int> flagGridPositions;
+    public List<Vector2Int> coinGridPositions;
 
     public void SetupData(Player player,LevelSO levelData)
     {
@@ -31,11 +32,8 @@ public class LevelCollisionHandler : MonoBehaviour
         playerTiles = player.GeneratePlayer();
     }
 
-    public List<Vector2Int> GetWalls()
-        => wallGridPositions;
-    public List<Vector2Int> GetFlags()
-        => flagGridPositions;
-
+    public void UpdateCoins(List<Vector2Int> positions)
+        => coinGridPositions = positions;
 
     public bool CanLandHere(Vector2 pPos)
     {
@@ -64,16 +62,17 @@ public class LevelCollisionHandler : MonoBehaviour
             case CollisionTileType.Flag:
                 return flagGridPositions;
             case CollisionTileType.Coin:
-                return flagGridPositions;
+                return coinGridPositions;
             case CollisionTileType.Wall:
                 return wallGridPositions;
-            
+
             default:
                 Debug.Log("No collision found.");
                 return null;
         }
     }
-    public bool IsCollidingWith(CollisionTileType tile,Vector2 pPos)
+    
+    public bool IsCollidingWith(CollisionTileType tile, Vector2 pPos, out List<Vector2Int> collisionCells)
     {
         Vector2Int playerPos = new(
             Mathf.RoundToInt(pPos.x),
@@ -81,6 +80,16 @@ public class LevelCollisionHandler : MonoBehaviour
         );
 
         List<Vector2Int> tiles = GetCollisionList(tile);
-        return playerTiles.Any(pos => tiles.Contains(playerPos + pos));
+
+        var cols = playerTiles
+            .Select(pos => playerPos + pos)
+            .Where(worldPos => tiles.Contains(worldPos))
+            .ToList();
+
+        bool any = cols.Count > 0;
+
+        collisionCells = any ? cols : null;
+
+        return any;
     }
 }

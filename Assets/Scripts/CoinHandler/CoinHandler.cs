@@ -1,16 +1,24 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 
+[System.Serializable]
 public class CoinInstance
 {
     public GameObject Instance;
     public bool Collected;
+    [SerializeField] Vector2 position;
 
     public Vector2 Position {
         get => Instance.transform.position; 
-        set => Instance.transform.position = value;
+        set {
+            position = value;
+            Instance.transform.position = value;
+        }
     }
 }
 
@@ -19,65 +27,66 @@ public class CoinHandler : MonoBehaviour
     [SerializeField] private GameObject CoinPrefab;
     [SerializeField] int coinPoolCount;
     [SerializeField] Transform coinsParent;
+    [SerializeField] private TextMeshProUGUI textRenderer;
 
-    private CoinInstance[] Coins;
-    private List<CoinInstance> ActiveCoins;
-
-
-    public static CoinHandler GetCoinHandler()
-        => FindFirstObjectByType<CoinHandler>();
+    private Queue<CoinInstance> Coins;
+    [SerializeField] List<CoinInstance> ActiveCoins;
     
-    public bool IsHittingACoin(Vector2 PlayerPos)
+    public void RewardCoin(Vector2 pos)
     {
-        foreach (var Coin in ActiveCoins)
-        {
-            if((PlayerPos - Coin.Position).magnitude < 0.1f && Coin.Collected == false)
-            {
-                SaveStateHandler.AddCash(1);
-                Coin.Collected = true;
-                return true;
-            }
-        }
-
-        return false;
+        var v2Int = new Vector2Int((int)pos.x,(int)pos.y);
+        var coin = ActiveCoins.FirstOrDefault(c => c.Position == v2Int);
+        print(coin + ", " + pos + ", " + v2Int);
+        if(coin == null)
+            return;
+        
+        print(pos);
+        SaveStateHandler.AddCash(1);
+        textRenderer.text = SaveStateHandler.GetCash().ToString();
+        coin.Instance.SetActive(false);
+        coin.Position = Vector2.zero;
+        coin.Collected = false;
+        
+        ActiveCoins.Remove(coin);
+        Coins.Enqueue(coin);
     }
 
     private void Awake()
     {
         CreateCoins();
         ActiveCoins = new();
+        textRenderer.text = SaveStateHandler.GetCash().ToString();
     }
 
     private void CreateCoins()
     {
-        Coins = new CoinInstance[coinPoolCount];
+        Coins = new();
 
         for (int i = 0; i < coinPoolCount; i++)
         {
-            Coins[i] = new CoinInstance()
+            CoinInstance c = new CoinInstance()
             {
                 Instance = Instantiate(CoinPrefab,coinsParent),
                 Collected = false,
                 Position = Vector2.zero
             };
-
-            Coins[i].Instance.SetActive(false);
+            c.Instance.SetActive(false);
+            Coins.Enqueue(c);
         }
     }
 
-    private Vector2 GetSafeSpot(List<Vector3Int> FreeTiles)
+    private float GetSafeSpot(int y,List<Vector3Int> FreeTiles)
     {
-        var pos = FreeTiles[Random.Range(0,FreeTiles.Count)];
+        var validTiles = FreeTiles.Where(v => v.y == y).ToList();
+        var pos = validTiles[UnityEngine.Random.Range(0,validTiles.Count)];
         FreeTiles.Remove(pos);
-
-        return new(pos.x,pos.y);
+        return pos.x;
     }
 
-    public void SpawnCoins(int Amount,Tilemap Level)
+    public List<Vector2Int> SpawnCoins(Tilemap Level)
     {
+        List<Vector2Int> retTiles = new();
         List<Vector3Int> tiles = new();
-        print(Level == null);
-        
         var bounds = Level.cellBounds;
 
         foreach (var item in bounds.allPositionsWithin)
@@ -86,15 +95,20 @@ public class CoinHandler : MonoBehaviour
                 tiles.Add(item);
         }
 
-        if(Amount > coinPoolCount)
-            Amount = coinPoolCount;
 
         ClearCoins();
-        for (int i = 0; i < Amount; i++)
+        for (int y = bounds.min.y; y < bounds.max.y - 3; y++)
         {
-            Coins[i].Position = GetSafeSpot(tiles);
-            Coins[i].Instance.SetActive(true);
+            if(UnityEngine.Random.Range(0,1f) > .1f)
+                continue;
+
+            var next = Coins.Dequeue();
+            next.Position = new(GetSafeSpot(y,tiles),y);
+            next.Instance.SetActive(true);
+            retTiles.Add(new((int)next.Position.x,(int)next.Position.y));
+            ActiveCoins.Add(next);
         }
+        return retTiles;
     }
 
     private void ClearCoins()
@@ -107,6 +121,7 @@ public class CoinHandler : MonoBehaviour
             item.Instance.SetActive(false);
             item.Position = Vector2.zero;
             item.Collected = false;
+            Coins.Enqueue(item);
         }
 
         ActiveCoins.Clear();
