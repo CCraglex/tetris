@@ -16,6 +16,8 @@ public class LevelGameplay : MonoBehaviour
     [SerializeField] private Player player;
     [SerializeField] private LevelCamera levelCamera;
 
+    [SerializeField] private LevelHypeTextHandler hypeText;
+
     private IEnumerator TickTimer(int levelID)
     {
         levelText.gameObject.SetActive(true);
@@ -48,7 +50,12 @@ public class LevelGameplay : MonoBehaviour
 
     public void OnPlayerWon()
     {
-        print("Win!");
+        IEnumerator WinSequence()
+        {
+            yield return StartCoroutine(hypeText.PlayWin());
+            print("Load Win Scene");
+        }
+        StartCoroutine(WinSequence());
     }
 
     public IEnumerator ActivatePowerup()
