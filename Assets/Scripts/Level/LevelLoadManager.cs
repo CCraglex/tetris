@@ -26,12 +26,15 @@ public class LevelLoadManager : MonoBehaviour
 
         collisionHandler.SetupData(Player,levelData);
         cameraHandler.UpdateCameraStats(levelData);
-
+        levelGameplay.lastLoadedLevel = levelID;
         collisionHandler.UpdateCoins(coinHandler.SpawnCoins(Map));
     }
 
     public void ReadyLevel(int levelID)
         => levelGameplay.StartCoroutine(levelGameplay.StartPlayingLevel(levelID));
+    
+    public void ClearMap()
+        => Map.ClearAllTiles();
 
     public static ImmunityPowerup powerupInstance;
     public static CrushedTileGenerator tileAnimator;

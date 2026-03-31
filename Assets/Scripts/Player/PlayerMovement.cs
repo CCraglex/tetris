@@ -46,10 +46,7 @@ public class PlayerMovement : MonoBehaviour
         if(collisionHandler.IsCollidingWith(CollisionTileType.Coin,transform.position,out var positions))
         {           
             foreach (var p in positions)
-            {
-                print(p);
                 coinHandler.RewardCoin(p);
-            }
         }
     }
 

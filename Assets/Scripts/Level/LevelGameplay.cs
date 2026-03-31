@@ -2,11 +2,20 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 public class LevelGameplay : MonoBehaviour
 {
     public bool isPowerUpOn;
+    public int collectedCashThisRound;
+    public int lastLoadedLevel;
+
+    [SerializeField] private LevelLoadManager levelLoader;
+
+    [SerializeField] private CanvasGroup winCanvas;
+    [SerializeField] private CanvasGroup swapCanvas;
+    [SerializeField] private CanvasGroup gameCanvas;
 
     [SerializeField] private float powerupTimer;
 
@@ -27,6 +36,9 @@ public class LevelGameplay : MonoBehaviour
 
     public IEnumerator StartPlayingLevel(int levelID)
     {
+        lastLoadedLevel = levelID;
+        collectedCashThisRound = 0;
+
         yield return TickTimer(levelID);
         levelText.StartCoroutine(levelText.PlayAnim());
 
@@ -53,7 +65,21 @@ public class LevelGameplay : MonoBehaviour
         IEnumerator WinSequence()
         {
             yield return StartCoroutine(hypeText.PlayWin());
-            print("Load Win Scene");
+            gameCanvas.blocksRaycasts = false;
+
+            yield return swapCanvas.DOFade(1,0.65f)
+                .WaitForCompletion();
+
+            yield return new WaitForSeconds(0.25f);
+            gameCanvas.alpha = 0;
+            levelLoader.ClearMap();
+            player.ClearTiles();
+            
+            winCanvas.alpha = 1;
+            winCanvas.blocksRaycasts = true;
+
+             yield return swapCanvas.DOFade(0,0.65f)
+                .WaitForCompletion();  
         }
         StartCoroutine(WinSequence());
     }

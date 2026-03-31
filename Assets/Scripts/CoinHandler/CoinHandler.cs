@@ -25,6 +25,8 @@ public class CoinInstance
 
 public class CoinHandler : MonoBehaviour
 {
+    [SerializeField] private LevelGameplay coinCollectData;
+
     [SerializeField] private GameObject CoinPrefab;
     [SerializeField] int coinPoolCount;
     [SerializeField] Transform coinsParent;
@@ -58,11 +60,12 @@ public class CoinHandler : MonoBehaviour
         uiObj.GetComponent<RectTransform>().anchoredPosition = localPos;
 
         SaveStateHandler.AddCash(1);
-        textRenderer.text = SaveStateHandler.GetCash().ToString();
+        textRenderer.text = $"{SaveStateHandler.GetCash()} <sprite index= 0>";
         coin.Instance.SetActive(false);
         coin.Position = Vector2.zero;
         coin.Collected = false;
-        
+        coinCollectData.collectedCashThisRound += 1;
+
         ActiveCoins.Remove(coin);
         Coins.Enqueue(coin);
     }
@@ -71,7 +74,7 @@ public class CoinHandler : MonoBehaviour
     {
         CreateCoins();
         ActiveCoins = new();
-        textRenderer.text = SaveStateHandler.GetCash().ToString();
+        textRenderer.text = $"{SaveStateHandler.GetCash()} <sprite index= 0>";
     }
 
     private void CreateCoins()

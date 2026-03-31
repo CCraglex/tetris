@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
         tile.GetComponent<SpriteRenderer>().sprite = tileVisual;
     }
 
-    private void ClearTiles()
+    public void ClearTiles()
     {
         foreach (Transform child in transform)
             Destroy(child.gameObject);
