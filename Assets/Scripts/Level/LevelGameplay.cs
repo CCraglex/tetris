@@ -1,13 +1,12 @@
-
-using System;
 using System.Collections;
-using System.Threading.Tasks;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelGameplay : MonoBehaviour
 {
-    public bool isPowerUpOn;
+    public float remainingPowerupTime;
     public int collectedCashThisRound;
     public int lastLoadedLevel;
 
@@ -16,6 +15,9 @@ public class LevelGameplay : MonoBehaviour
     [SerializeField] private CanvasGroup winCanvas;
     [SerializeField] private CanvasGroup swapCanvas;
     [SerializeField] private CanvasGroup gameCanvas;
+
+    [SerializeField] private CanvasGroup powerupElement;
+    [SerializeField] private Image powerupImage;
 
     [SerializeField] private float powerupTimer;
 
@@ -26,6 +28,12 @@ public class LevelGameplay : MonoBehaviour
     [SerializeField] private LevelCamera levelCamera;
 
     [SerializeField] private LevelHypeTextHandler hypeText;
+    [SerializeField] private TextMeshProUGUI skillCountText;
+
+    private void Start()
+    {
+        skillCountText.text = SaveStateHandler.GetPowerupCount().ToString();
+    }
 
     private IEnumerator TickTimer(int levelID)
     {
@@ -46,18 +54,47 @@ public class LevelGameplay : MonoBehaviour
         levelCamera.StartAction();
     }
 
-    public void OnGameOver()
+    public IEnumerator ActivatePowerup()
     {
-        print("Lose!");
+        skillCountText.text = SaveStateHandler.GetPowerupCount().ToString();
+        remainingPowerupTime = powerupTimer;
+        float warningTime = 2f;
+        powerupElement.alpha = 1;
+
+        float fastSpeed = 0.15f;
+        float slowSpeed = 0.6f;
+        
+        Tween fadeTween;
+
+        void StartFadeLoop()
+        {
+            float targetAlpha = powerupImage.color.a > 0.8f ? 0.6f : 1f;
+            float speed = remainingPowerupTime < warningTime ? fastSpeed : slowSpeed;
+
+            fadeTween = powerupImage.DOFade(targetAlpha, speed)
+                .SetEase(Ease.Linear)
+                .OnComplete(StartFadeLoop);
+        }
+
+        StartFadeLoop();
+        while(remainingPowerupTime > 0)
+        {
+            yield return null;
+            remainingPowerupTime -= Time.deltaTime;
+            powerupImage.fillAmount = remainingPowerupTime / powerupTimer;
+        }
+
+        powerupElement.alpha = 0;
+        powerupImage.DOKill();
     }
 
-
-    public void OnPlayerDeath()
+    public bool OnPlayerDeath()
     {
-        if(!isPowerUpOn)
-            OnGameOver();
-        else
-            print("Powerup!");
+        if(remainingPowerupTime > 0)
+            return false;
+            
+        OnGameOver();
+        return true;
     }
 
     public void OnPlayerWon()
@@ -84,10 +121,8 @@ public class LevelGameplay : MonoBehaviour
         StartCoroutine(WinSequence());
     }
 
-    public IEnumerator ActivatePowerup()
+    public void OnGameOver()
     {
-        isPowerUpOn = true;
-        yield return new WaitForSeconds(powerupTimer);
-        isPowerUpOn = false;
+        print("Lose!");
     }
 }

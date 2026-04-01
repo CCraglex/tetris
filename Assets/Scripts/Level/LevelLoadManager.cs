@@ -35,10 +35,4 @@ public class LevelLoadManager : MonoBehaviour
     
     public void ClearMap()
         => Map.ClearAllTiles();
-
-    public static ImmunityPowerup powerupInstance;
-    public static CrushedTileGenerator tileAnimator;
-
-    public static bool Immune;
-    public static bool AllowedToPowerup;
 }

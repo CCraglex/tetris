@@ -63,6 +63,8 @@ public static class SaveStateHandler
         currentdata.upg1Amount -= 1;
         Save();
     }
+    public static int GetPowerupCount()
+        => currentdata.upg1Amount;
 }
 
 [System.Serializable]

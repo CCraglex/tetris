@@ -74,11 +74,12 @@ public class Player : MonoBehaviour
                     if(collisionHandler.IsCollidingWith(CollisionTileType.Flag,transform.position,out _))
                         levelGameplay.OnPlayerWon();
                     else
-                        levelGameplay.OnPlayerDeath();
-
-                    yield break;
+                    {
+                        bool actualDeath = levelGameplay.OnPlayerDeath();
+                        if(actualDeath)
+                            yield break;
+                    }
                 }
-
                 yield return null; // check again next frame
             }
             else

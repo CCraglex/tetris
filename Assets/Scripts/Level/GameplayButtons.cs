@@ -1,9 +1,9 @@
-
 using UnityEngine;
 
 public class GamePlayButtons : MonoBehaviour
 {
     public PlayerMovement P;
+    public LevelGameplay levelGameplay;
 
     public void TurnRight()
         => P.RotateRight();
@@ -16,4 +16,13 @@ public class GamePlayButtons : MonoBehaviour
     
     public void MoveLeft()
         => P.MoveLeft();
+    
+    public void SkillButton()
+    {
+        if(!SaveStateHandler.HasPowerup())
+            return;
+
+        SaveStateHandler.UsePowerup();
+        StartCoroutine(levelGameplay.ActivatePowerup());
+    }
 }
