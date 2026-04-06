@@ -5,17 +5,11 @@ using UnityEngine;
 public class LevelCamera : MonoBehaviour
 {
     public bool DoFollow;
-    public bool Shaking;
-
 
     [SerializeField] private float CamInputStrength;
     [SerializeField] private float CamInputDuration;
     [SerializeField] private Transform followTarget;
     [SerializeField] private Camera cam2D;
-
-
-    private float camWidth;
-    private float camMoveSpeed;
 
     private float lowerLimit;
 
@@ -44,48 +38,10 @@ public class LevelCamera : MonoBehaviour
         while (DoFollow && transform.position.y > lowerLimit)
         {
             yield return null;
-            if(Shaking)
+            if(followTarget.position.y > transform.position.y)
                 continue;
                 
             transform.Translate(-speed * Time.deltaTime);
         }
     }
-
-    public IEnumerator ShakeAction()
-    {
-        float elapsed = 0f;
-        float speed = 25f;          
-        float radiusMin = CamInputStrength * 0.5f;
-        float radiusMax = CamInputStrength;
-
-        Vector2 shakeOffset = Vector2.zero;
-        Vector2 shakeTarget = Vector2.zero;
-        Shaking = true;
-
-        while (elapsed < CamInputDuration)
-        {
-            elapsed += Time.deltaTime;
-
-            Vector2 origin = followTarget.position;
-
-            if ((shakeTarget - shakeOffset).sqrMagnitude < 0.001f)
-            {
-                shakeTarget = Random.insideUnitCircle.normalized *
-                            Random.Range(radiusMin, radiusMax);
-            }
-
-            shakeOffset = Vector2.MoveTowards(
-                shakeOffset,
-                shakeTarget,
-                speed * Time.deltaTime
-            );
-
-            transform.position = origin + shakeOffset;
-            yield return null;
-        }
-
-        transform.position = followTarget.position;
-        Shaking = false;
-    }
-
 }

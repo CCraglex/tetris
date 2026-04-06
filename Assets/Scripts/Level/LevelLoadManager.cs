@@ -34,5 +34,8 @@ public class LevelLoadManager : MonoBehaviour
         => levelGameplay.StartCoroutine(levelGameplay.StartPlayingLevel(levelID));
     
     public void ClearMap()
-        => Map.ClearAllTiles();
+    {
+        Map.ClearAllTiles();
+        coinHandler.ClearCoins();
+    }
 }

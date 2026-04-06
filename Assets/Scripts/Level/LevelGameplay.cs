@@ -11,6 +11,7 @@ public class LevelGameplay : MonoBehaviour
     public int lastLoadedLevel;
 
     [SerializeField] private LevelLoadManager levelLoader;
+    [SerializeField] private LosePanel loseCanvas;
 
     [SerializeField] private CanvasGroup winCanvas;
     [SerializeField] private CanvasGroup swapCanvas;
@@ -92,8 +93,9 @@ public class LevelGameplay : MonoBehaviour
     {
         if(remainingPowerupTime > 0)
             return false;
-            
-        OnGameOver();
+        
+        levelCamera.DoFollow = false;
+        StartCoroutine(OnGameOver());
         return true;
     }
 
@@ -121,8 +123,20 @@ public class LevelGameplay : MonoBehaviour
         StartCoroutine(WinSequence());
     }
 
-    public void OnGameOver()
+    public IEnumerator OnGameOver()
     {
-        print("Lose!");
+        bool revived = false;
+        yield return StartCoroutine(loseCanvas.WaitResponse(() => revived = true));
+
+        if (revived)
+        {
+            yield return StartCoroutine(StartPlayingLevel(lastLoadedLevel));
+            levelCamera.DoFollow = true;
+            yield return ActivatePowerup();
+        }
+        else {
+            yield return levelLoader.CreateLevel(lastLoadedLevel);
+            levelLoader.ReadyLevel(lastLoadedLevel);
+        }
     }
 }

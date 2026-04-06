@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
                     {
                         bool actualDeath = levelGameplay.OnPlayerDeath();
                         if(actualDeath)
-                            yield break;
+                            movement.Active = false;
                     }
                 }
                 yield return null; // check again next frame

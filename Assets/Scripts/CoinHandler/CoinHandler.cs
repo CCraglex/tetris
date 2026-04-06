@@ -130,7 +130,7 @@ public class CoinHandler : MonoBehaviour
         return retTiles;
     }
 
-    private void ClearCoins()
+    public void ClearCoins()
     {
         if(ActiveCoins.Count == 0)
             return;
