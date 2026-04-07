@@ -46,8 +46,6 @@ public class LevelGameplay : MonoBehaviour
     public IEnumerator StartPlayingLevel(int levelID)
     {
         lastLoadedLevel = levelID;
-        collectedCashThisRound = 0;
-
         yield return TickTimer(levelID);
         levelText.StartCoroutine(levelText.PlayAnim());
 
@@ -131,7 +129,6 @@ public class LevelGameplay : MonoBehaviour
         if (revived)
         {
             yield return StartCoroutine(StartPlayingLevel(lastLoadedLevel));
-            levelCamera.DoFollow = true;
             yield return ActivatePowerup();
         }
         else {

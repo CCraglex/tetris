@@ -60,12 +60,3 @@ public static class AssetLoader
     public static LevelSO GetCurrentLevel()
         => currentLevel;
 }
-
-public static class LevelLoader
-{
-    public static async Task LevelLoadingTask(int level)
-    {
-        var levelLoad = AssetLoader.LoadLevel(level);
-        await levelLoad;
-    }
-}

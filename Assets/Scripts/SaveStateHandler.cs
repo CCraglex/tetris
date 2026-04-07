@@ -4,6 +4,9 @@ using UnityEngine;
 
 public static class SaveStateHandler
 {
+    public static bool Sfx;
+    public static bool Mus;
+    
     private static SaveData currentdata;
     const string Path = "/SaveData.json";
 
