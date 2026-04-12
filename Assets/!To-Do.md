@@ -5,9 +5,9 @@
 - Handle sound effects triggering
 -- Implement Sound effects
 -- Create sound effects
+-- Create sound service
 - Create shop UI
 -- Add Coin purchases
 -- Add Coin ad offer
 -- Add powerup purchases
 -- Implement shop menu navigation
-
