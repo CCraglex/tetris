@@ -27,24 +27,22 @@ public class PausePanel : MonoBehaviour
 
     [SerializeField] private LevelLoadManager levelLoader;
 
+    [SerializeField] private RectTransform pauseRect;
+    [SerializeField] private GameObject blurRect;
 
-    private void Awake()
-    {
-        SetSFX(PlayerPrefs.GetInt("Sfx") == 1);
-        SetSong(PlayerPrefs.GetInt("Mus") == 1);
-    }
+    public bool isOpen;
 
-    public void SetSFX(bool value)
+    public void SetSFX()
     {
-        bool v =  value == true;
+        bool v = PlayerPrefs.GetInt("Sfx") == 1;
         sfxImg.sprite = v ? sfxOn : sfxOff;
         PlayerPrefs.SetInt("Sfx",v ? 1 : 0);
         SaveStateHandler.Sfx = v;
     }
 
-    public void SetSong(bool value)
+    public void SetSong()
     {
-        bool v =  value == true;
+        bool v = PlayerPrefs.GetInt("Mus") == 1;
         musImg.sprite = v ? musOn : musOff;
         PlayerPrefs.SetInt("Mus",v ? 1 : 0);
         SaveStateHandler.Mus = v;
@@ -52,29 +50,65 @@ public class PausePanel : MonoBehaviour
 
     public void PauseButton()
     {
+        if(isOpen)
+            return;
+        
+        isOpen = true;
+
         player.StopPlaying();
         camera2D.EndAction();
 
-        //Tween
+        pauseCanvas.blocksRaycasts = true;
+        pauseCanvas.interactable = true;
+
+        blurRect.SetActive(true);
+
+        pauseCanvas.alpha = 1f;
+
+        Vector2 startPos = new Vector2(0, Screen.height);
+        pauseRect.anchoredPosition = startPos;
+
+        Sequence seq = DOTween.Sequence();
+
+        seq.Append(
+            pauseRect.DOAnchorPos(Vector2.zero, 0.5f)
+            .SetEase(Ease.OutCubic)
+        );
+
+        seq.Join(
+            pauseRect.DOPunchScale(Vector3.one * 0.1f, 0.4f, 8, 0.8f)
+        );
+
+        seq.Join(
+            pauseCanvas.DOFade(1f, 0.2f)
+        );
     }
 
     public void ReturnToMenu()
-    {
-        //TODO: Coins not handled, probably lingering
+    {      
         IEnumerator IAction()
         {
             pauseCanvas.blocksRaycasts = false;
 
             yield return swapCanvas.DOFade(1,0.65f)
                 .WaitForCompletion();
+                
+            gameplay.ClearGame();
+            gameplay.levelText.HideText();
+            gameCanvas.alpha = 0;
+            gameCanvas.blocksRaycasts = false;
 
-            yield return new WaitForSeconds(0.25f);
             pauseCanvas.alpha = 0;
+            pauseCanvas.blocksRaycasts = false;
+
             menuCanvas.alpha = 1;
             menuCanvas.blocksRaycasts = true;
 
-             yield return swapCanvas.DOFade(0,0.65f)
-                .WaitForCompletion();            
+            yield return new WaitForSeconds(0.25f);
+            yield return swapCanvas.DOFade(0,0.65f)
+                .WaitForCompletion();   
+
+            isOpen = false;         
         }
 
         StartCoroutine(IAction());
@@ -99,6 +133,8 @@ public class PausePanel : MonoBehaviour
             levelLoader.ReadyLevel(gameplay.lastLoadedLevel);
             yield return swapCanvas.DOFade(0,0.65f)
                 .WaitForCompletion();
+            
+            isOpen = false;
         }
 
         StartCoroutine(IAction());
@@ -106,6 +142,11 @@ public class PausePanel : MonoBehaviour
 
     public void Continue()
     {
-        StartCoroutine(gameplay.StartPlayingLevel(gameplay.lastLoadedLevel));
+        isOpen = false;
+        pauseCanvas.alpha = 0;
+        pauseCanvas.blocksRaycasts = false;
+
+        gameplay.player.StartPlaying();
+        gameplay.levelCamera.StartAction();
     }
 }

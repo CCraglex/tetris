@@ -38,12 +38,31 @@ public class Menu : MonoBehaviour
 
     public void Start()
     {
+        Application.targetFrameRate = 120;
+        
         menuUtility = new();
         menuUtility.Instance = this;
         menuUtility.PlayMenuIntro();
 
         levelUtility = new();
         levelUtility.Instance = this;
+    }
+
+    public void ReturnToMenuFromLevelSelect()
+    {
+        IEnumerator IAction()
+        {
+            yield return swapAnimation.DOFade(1, 0.65f).WaitForCompletion();
+            yield return new WaitForSeconds(0.75f);
+            levelScreen.alpha = 0;
+            levelScreen.blocksRaycasts = false;
+
+            menuScreen.alpha = 1;
+            menuScreen.blocksRaycasts = true;
+            yield return swapAnimation.DOFade(0, 0.65f).WaitForCompletion();            
+        }
+
+        StartCoroutine(IAction());
     }
 
     public void LevelButton(string level)

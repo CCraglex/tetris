@@ -1,15 +1,24 @@
 using System.Collections;
 using System.Threading.Tasks;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
 public class LevelTextHandler : MonoBehaviour
 {
+    public bool isCountdownComplete;
+    public bool isMoveUpwardComplete;
+
+    [SerializeField] private PausePanel pausePanel;
+    [SerializeField] private LevelGameplay levelGameplay;
+
     private TextMeshProUGUI text;
     private Vector2 StartPos;
     const float moveDistance = 1920 / 2 + 300 ;
     [SerializeField] private float moveTimer;
-    [SerializeField] private float tickTimer;
+    public float tickTimer;
+
+    public int lastID;
 
     private void Awake()
     {
@@ -26,38 +35,69 @@ public class LevelTextHandler : MonoBehaviour
         text.fontSize /= 3;
     }
     
-    public IEnumerator PlayAnim()
+    public IEnumerator ICountDown(int ID)
     {
-        var rect = transform as RectTransform;
-        
-        float dt = 0;
-        
-        yield return new WaitForSeconds(1);
-        while (dt < moveTimer)
-        {
-            yield return new WaitForSeconds(Time.deltaTime);
-            dt += Time.deltaTime;
+        isMoveUpwardComplete = false;
+        isCountdownComplete = false;
 
-            rect.anchoredPosition = Vector2.Lerp(StartPos,new(StartPos.x,StartPos.y + moveDistance),dt / moveTimer);
+        print("Count down");
+         text.color = new Color(0.95f, 0.95f, 0.95f, 0.2f); 
+        var rect = transform as RectTransform;
+        rect.anchoredPosition = StartPos;
+        lastID = ID;
+        text.text = "3";
+        float timer = 3f * tickTimer;
+        while (timer > 0)
+        {
+            yield return null;
+
+            if(ID != lastID)
+            {
+                print("Dead");
+                yield break;
+            }
+
+            if (pausePanel.isOpen)
+                continue;
+
+            text.text = Mathf.Ceil(timer / tickTimer).ToString();
+            timer -= Time.deltaTime;
         }
 
-        rect.anchoredPosition = new(StartPos.x,StartPos.y + moveDistance);
-    }
+        text.text = "0";
+        isCountdownComplete = true;
+    } 
 
-    public IEnumerator PlayBeginning()
+    public IEnumerator IMoveUpward(float ID)
     {
-        var t = new WaitForSeconds(tickTimer);
+        print("Move up");
+
         var rect = transform as RectTransform;
         rect.anchoredPosition = StartPos;
 
-        int start = 3;
+        float t = 0;
+        float target = StartPos.y + moveDistance;
 
-        text.fontSize *= 3;
-        while(start > 0)
+        while (rect.anchoredPosition.y < target)
         {
-            text.text = start.ToString();
-            yield return t;
-            start -= 1;
+            if(ID != lastID)
+            {
+                print("Dead");
+                yield break;
+            }
+                
+            yield return null;
+            if (pausePanel.isOpen)
+                continue;
+            
+            t += Time.deltaTime;
+            rect.anchoredPosition = Vector2.Lerp(StartPos,new(StartPos.x,target),t / 2.25f);
         }
+
+        print("Complete");
+        isMoveUpwardComplete = true;
     }
+
+    public void HideText()
+        => text.color = new(0,0,0,0);
 }

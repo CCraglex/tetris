@@ -72,7 +72,10 @@ public class Player : MonoBehaviour
                 if (lockTimer >= timePerStep)
                 {
                     if(collisionHandler.IsCollidingWith(CollisionTileType.Flag,transform.position,out _))
+                    {
                         levelGameplay.OnPlayerWon();
+                        movement.Active = false;
+                    }
                     else
                     {
                         bool actualDeath = levelGameplay.OnPlayerDeath();
@@ -80,7 +83,7 @@ public class Player : MonoBehaviour
                             movement.Active = false;
                     }
                 }
-                yield return null; // check again next frame
+                yield return null;
             }
             else
             {

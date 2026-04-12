@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class LevelGameplay : MonoBehaviour
 {
+    public bool pauseAllowed;
+
     public float remainingPowerupTime;
     public int collectedCashThisRound;
     public int lastLoadedLevel;
@@ -24,33 +26,40 @@ public class LevelGameplay : MonoBehaviour
 
     [SerializeField] LevelCollisionHandler collisionHandler;
 
-    [SerializeField] private LevelTextHandler levelText;
-    [SerializeField] private Player player;
-    [SerializeField] private LevelCamera levelCamera;
+    public LevelTextHandler levelText;
+    public Player player;
+    public LevelCamera levelCamera;
 
     [SerializeField] private LevelHypeTextHandler hypeText;
     [SerializeField] private TextMeshProUGUI skillCountText;
+
+    public bool levelReset;
 
     private void Start()
     {
         skillCountText.text = SaveStateHandler.GetPowerupCount().ToString();
     }
 
-    private IEnumerator TickTimer(int levelID)
-    {
-        levelText.gameObject.SetActive(true);
-        levelText.SetLevel(levelID);
-        yield return levelText.PlayBeginning();
-    }
-
     public IEnumerator StartPlayingLevel(int levelID)
     {
+        levelText.lastID += 1;
+        pauseAllowed = false;
+        player.StopPlaying();
+        levelCamera.EndAction();
         lastLoadedLevel = levelID;
-        yield return TickTimer(levelID);
-        levelText.StartCoroutine(levelText.PlayAnim());
+
+        yield return levelText.StartCoroutine(levelText.ICountDown(levelText.lastID));
+        if(!levelText.isCountdownComplete)
+            yield break;
 
         player.StartPlaying();
         levelCamera.StartAction();
+
+        StartCoroutine(levelText.IMoveUpward(levelText.lastID));
+        if(!levelText.isMoveUpwardComplete)
+            yield break;
+
+        pauseAllowed = true;
     }
 
     public IEnumerator ActivatePowerup()
@@ -64,6 +73,7 @@ public class LevelGameplay : MonoBehaviour
         float slowSpeed = 0.6f;
         
         Tween fadeTween;
+        powerupImage.DOKill();
 
         void StartFadeLoop()
         {
@@ -76,7 +86,8 @@ public class LevelGameplay : MonoBehaviour
         }
 
         StartFadeLoop();
-        while(remainingPowerupTime > 0)
+
+        while(remainingPowerupTime > 0 && fadeTween.IsPlaying())
         {
             yield return null;
             remainingPowerupTime -= Time.deltaTime;
@@ -108,10 +119,8 @@ public class LevelGameplay : MonoBehaviour
                 .WaitForCompletion();
 
             yield return new WaitForSeconds(0.25f);
-            gameCanvas.alpha = 0;
-            levelLoader.ClearMap();
-            player.ClearTiles();
-            
+            ClearGame();
+            gameCanvas.alpha = 0;            
             winCanvas.alpha = 1;
             winCanvas.blocksRaycasts = true;
 
@@ -119,6 +128,15 @@ public class LevelGameplay : MonoBehaviour
                 .WaitForCompletion();  
         }
         StartCoroutine(WinSequence());
+    }
+
+    public void ClearGame()
+    {
+        levelLoader.ClearMap();
+        levelText.lastID = 0;
+        player.ClearTiles();
+        player.StopPlaying();
+        levelCamera.EndAction();
     }
 
     public IEnumerator OnGameOver()
@@ -129,7 +147,7 @@ public class LevelGameplay : MonoBehaviour
         if (revived)
         {
             yield return StartCoroutine(StartPlayingLevel(lastLoadedLevel));
-            yield return ActivatePowerup();
+            yield return StartCoroutine(ActivatePowerup());
         }
         else {
             yield return levelLoader.CreateLevel(lastLoadedLevel);
