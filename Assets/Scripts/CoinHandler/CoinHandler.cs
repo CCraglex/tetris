@@ -75,6 +75,8 @@ public class CoinHandler : MonoBehaviour
         CreateCoins();
         ActiveCoins = new();
         textRenderer.text = $"{SaveStateHandler.GetCash()} <sprite index= 0>";
+
+        SaveStateHandler.CashChanged += (val) => textRenderer.text = $"{val} <sprite index= 0>";
     }
 
     private void CreateCoins()

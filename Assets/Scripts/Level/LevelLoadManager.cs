@@ -31,7 +31,7 @@ public class LevelLoadManager : MonoBehaviour
     }
 
     public void ReadyLevel(int levelID)
-        => levelGameplay.StartCoroutine(levelGameplay.StartPlayingLevel(levelID));
+        => levelGameplay.StartPlayingLevel(levelID);
     
     public void ClearMap()
     {

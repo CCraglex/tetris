@@ -6,14 +6,13 @@ using UnityEngine.UI;
 
 public class LevelGameplay : MonoBehaviour
 {
-    public bool pauseAllowed;
-
     public float remainingPowerupTime;
     public int collectedCashThisRound;
     public int lastLoadedLevel;
 
     [SerializeField] private LevelLoadManager levelLoader;
     [SerializeField] private LosePanel loseCanvas;
+    [SerializeField] private PausePanel pausePanel;
 
     [SerializeField] private CanvasGroup winCanvas;
     [SerializeField] private CanvasGroup swapCanvas;
@@ -38,33 +37,36 @@ public class LevelGameplay : MonoBehaviour
     private void Start()
     {
         skillCountText.text = SaveStateHandler.GetPowerupCount().ToString();
+        SaveStateHandler.PowerupChanged += (val) => skillCountText.text = $"{val}";
     }
 
-    public IEnumerator StartPlayingLevel(int levelID)
+    public IEnumerator ICountDown()
     {
-        levelText.lastID += 1;
-        pauseAllowed = false;
-        player.StopPlaying();
-        levelCamera.EndAction();
-        lastLoadedLevel = levelID;
-
-        yield return levelText.StartCoroutine(levelText.ICountDown(levelText.lastID));
-        if(!levelText.isCountdownComplete)
+        bool completed = false;
+        yield return levelText.StartCoroutine(levelText.ICountDown(() => completed = true));
+        if (!completed)
             yield break;
 
         player.StartPlaying();
         levelCamera.StartAction();
 
-        StartCoroutine(levelText.IMoveUpward(levelText.lastID));
-        if(!levelText.isMoveUpwardComplete)
+        completed = false;
+        StartCoroutine(levelText.IMoveUpward(() => completed = true));
+        if (!completed)
             yield break;
+    }
 
-        pauseAllowed = true;
+    public void StartPlayingLevel(int levelID)
+    {
+        player.StopPlaying();
+        levelCamera.EndAction();
+        lastLoadedLevel = levelID;
+        StartCoroutine(ICountDown());
+        remainingPowerupTime = 0;
     }
 
     public IEnumerator ActivatePowerup()
     {
-        skillCountText.text = SaveStateHandler.GetPowerupCount().ToString();
         remainingPowerupTime = powerupTimer;
         float warningTime = 2f;
         powerupElement.alpha = 1;
@@ -90,6 +92,9 @@ public class LevelGameplay : MonoBehaviour
         while(remainingPowerupTime > 0 && fadeTween.IsPlaying())
         {
             yield return null;
+            if(pausePanel.isOpen)
+                continue;
+
             remainingPowerupTime -= Time.deltaTime;
             powerupImage.fillAmount = remainingPowerupTime / powerupTimer;
         }
@@ -146,7 +151,8 @@ public class LevelGameplay : MonoBehaviour
 
         if (revived)
         {
-            yield return StartCoroutine(StartPlayingLevel(lastLoadedLevel));
+            StartPlayingLevel(lastLoadedLevel);
+            yield return StartCoroutine(ICountDown());
             yield return StartCoroutine(ActivatePowerup());
         }
         else {

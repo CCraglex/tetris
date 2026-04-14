@@ -10,6 +10,7 @@ public static class SoundService
 
     public static void Init(Transform Parent,int StartChannelCount = 3)
     {
+        Channels = new();
         ChannelParent = Parent;
         SoundCoroutineHandler = ChannelParent.gameObject.AddComponent<SoundCoroutineHandler>();
         CreateChannels(StartChannelCount);

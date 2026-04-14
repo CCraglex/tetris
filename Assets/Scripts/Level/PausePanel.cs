@@ -48,6 +48,12 @@ public class PausePanel : MonoBehaviour
         SaveStateHandler.Mus = v;
     }
 
+    public void Pause()
+    {
+        player.StopPlaying();
+        camera2D.EndAction();
+    }
+
     public void PauseButton()
     {
         if(isOpen)
@@ -55,8 +61,7 @@ public class PausePanel : MonoBehaviour
         
         isOpen = true;
 
-        player.StopPlaying();
-        camera2D.EndAction();
+        Pause();
 
         pauseCanvas.blocksRaycasts = true;
         pauseCanvas.interactable = true;
@@ -130,23 +135,22 @@ public class PausePanel : MonoBehaviour
             gameCanvas.alpha = 1;
             gameCanvas.blocksRaycasts = true;
 
-            levelLoader.ReadyLevel(gameplay.lastLoadedLevel);
             yield return swapCanvas.DOFade(0,0.65f)
                 .WaitForCompletion();
-            
+
             isOpen = false;
+            gameplay.remainingPowerupTime = 0;
+            yield return StartCoroutine(gameplay.ICountDown());
         }
 
         StartCoroutine(IAction());
     }
 
     public void Continue()
-    {
+    {   
         isOpen = false;
         pauseCanvas.alpha = 0;
         pauseCanvas.blocksRaycasts = false;
-
-        gameplay.player.StartPlaying();
-        gameplay.levelCamera.StartAction();
+        StartCoroutine(gameplay.ICountDown());
     }
 }

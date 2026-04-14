@@ -1,9 +1,13 @@
 
+using System;
 using System.IO;
 using UnityEngine;
 
 public static class SaveStateHandler
 {
+    public static Action<int> CashChanged;
+    public static Action<int> PowerupChanged;
+
     public static bool Sfx;
     public static bool Mus;
     
@@ -48,11 +52,13 @@ public static class SaveStateHandler
 
     public static void AddCash(int amount){
         currentdata.cash += amount;
+        CashChanged.Invoke(currentdata.cash);
         Save();
     }
     
     public static void RemoveCash(int amount){
         currentdata.cash -= amount;
+        CashChanged.Invoke(currentdata.cash);
         Save();
     }
     public static bool HasCash(int amount)
@@ -60,10 +66,16 @@ public static class SaveStateHandler
     
     public static bool HasPowerup()
         => currentdata.upg1Amount > 0;
-    
+
+    public static void AddPowerup(int amount){
+        currentdata.upg1Amount += amount;
+        PowerupChanged.Invoke(currentdata.upg1Amount);
+        Save();
+    }
     public static void UsePowerup()
     {
         currentdata.upg1Amount -= 1;
+        PowerupChanged.Invoke(currentdata.upg1Amount);
         Save();
     }
     public static int GetPowerupCount()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using DG.Tweening;
@@ -6,9 +7,6 @@ using UnityEngine;
 
 public class LevelTextHandler : MonoBehaviour
 {
-    public bool isCountdownComplete;
-    public bool isMoveUpwardComplete;
-
     [SerializeField] private PausePanel pausePanel;
     [SerializeField] private LevelGameplay levelGameplay;
 
@@ -35,40 +33,28 @@ public class LevelTextHandler : MonoBehaviour
         text.fontSize /= 3;
     }
     
-    public IEnumerator ICountDown(int ID)
+    public IEnumerator ICountDown(Action A)
     {
-        isMoveUpwardComplete = false;
-        isCountdownComplete = false;
-
-        print("Count down");
-         text.color = new Color(0.95f, 0.95f, 0.95f, 0.2f); 
+        text.color = new Color(0.95f, 0.95f, 0.95f, 0.2f); 
         var rect = transform as RectTransform;
         rect.anchoredPosition = StartPos;
-        lastID = ID;
         text.text = "3";
         float timer = 3f * tickTimer;
         while (timer > 0)
         {
             yield return null;
-
-            if(ID != lastID)
-            {
-                print("Dead");
-                yield break;
-            }
-
             if (pausePanel.isOpen)
-                continue;
+                yield break;
 
             text.text = Mathf.Ceil(timer / tickTimer).ToString();
             timer -= Time.deltaTime;
         }
 
         text.text = "0";
-        isCountdownComplete = true;
+        A.Invoke();
     } 
 
-    public IEnumerator IMoveUpward(float ID)
+    public IEnumerator IMoveUpward(Action A)
     {
         print("Move up");
 
@@ -80,22 +66,13 @@ public class LevelTextHandler : MonoBehaviour
 
         while (rect.anchoredPosition.y < target)
         {
-            if(ID != lastID)
-            {
-                print("Dead");
-                yield break;
-            }
-                
             yield return null;
             if (pausePanel.isOpen)
-                continue;
+                yield break;
             
             t += Time.deltaTime;
             rect.anchoredPosition = Vector2.Lerp(StartPos,new(StartPos.x,target),t / 2.25f);
         }
-
-        print("Complete");
-        isMoveUpwardComplete = true;
     }
 
     public void HideText()
