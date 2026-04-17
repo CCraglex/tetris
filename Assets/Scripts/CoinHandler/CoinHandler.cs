@@ -38,6 +38,8 @@ public class CoinHandler : MonoBehaviour
 
     private Queue<CoinInstance> Coins;
     [SerializeField] List<CoinInstance> ActiveCoins;
+
+    [SerializeField] AudioClip coinClip;
     
     public void RewardCoin(Vector2 pos)
     {
@@ -68,6 +70,7 @@ public class CoinHandler : MonoBehaviour
 
         ActiveCoins.Remove(coin);
         Coins.Enqueue(coin);
+        SoundService.PlaySound(coinClip,0.5f,0.05f);
     }
 
     private void Awake()

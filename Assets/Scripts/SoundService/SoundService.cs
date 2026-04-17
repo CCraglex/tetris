@@ -16,6 +16,30 @@ public static class SoundService
         CreateChannels(StartChannelCount);
     }
 
+    public static void PauseAll()
+    {
+        if(Channels == null || Channels.Count == 0)
+            return;
+            
+        foreach (var channel in Channels)
+        {
+            if(channel.isPlaying)
+                channel.Pause();   
+        }
+    }
+
+    public static void ResumeAll()
+    {
+        if(Channels == null || Channels.Count == 0)
+            return;
+
+        foreach (var channel in Channels)
+        {
+            if(channel.isPlaying)
+                channel.UnPause();   
+        }
+    }
+
     private static void CreateChannels(int Amount)
     {
         for (int i = 0; i < Amount; i++)
@@ -42,7 +66,7 @@ public static class SoundService
         Channels = new();
     }
 
-    public static void PlaySound(AudioClip Clip)
+    public static void PlaySound(AudioClip Clip,float volume = 1,float pitchLow = 0,float pitchHigh = 0)
     {
         static IEnumerator WaitCompletion(AudioSource res)
         {
@@ -56,7 +80,11 @@ public static class SoundService
             Channels.TryDequeue(out res);
         }
 
+        Debug.Log(volume);
+        res.volume = volume;
+        res.pitch = pitchLow != 0 || pitchHigh != 0 ? Random.Range(1 + pitchLow,1 + pitchHigh) : 1;
         res.clip = Clip;
+        res.spatialBlend = 0f;
         res.Play();
 
         SoundCoroutineHandler.StartCoroutine(WaitCompletion(res));

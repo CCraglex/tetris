@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 39c724d05d468e41694994842a978f73
+guid: e3841037562f5ca839609f0796df5a26
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6585585207615152927
-    second: swapScreen_0
+      213: -167355387058667854
+    second: IconFront_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: swapScreen_0
+      name: IconFront_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1080
-        height: 1920
+        width: 276
+        height: 275
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 241, y: 338, z: 248, w: 350}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f13e7f9bad2b46b50800000000000000
-      internalID: 6585585207615152927
+      spriteID: 2bebe13892f6dadf0800000000000000
+      internalID: -167355387058667854
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 173c33905eacea26db08dbc8d4e0be23
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      swapScreen_0: 6585585207615152927
+      IconFront_0: -167355387058667854
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

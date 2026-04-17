@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LevelCollisionHandler collisionHandler;
     [SerializeField] private CoinHandler coinHandler;
 
+    [SerializeField] private AudioClip tickClip;
+
     private Transform Player;
     private Vector2Int[] playerTiles;
 
@@ -72,25 +74,33 @@ public class PlayerMovement : MonoBehaviour
 
     public void MoveDown()
     {
-        if(CanMoveDown())
+        if (CanMoveDown())
+        {
             Player.position += Vector3.down;
-        
+            SoundService.PlaySound(tickClip,0.08f,-0.15f,0.15f);
+        }
+            
         HandleCoinReward();
     }
         
     public void MoveLeft()
     {
         if(CanMoveLeft())
+        {
             Player.position += Vector3.left;
-        
+            SoundService.PlaySound(tickClip,0.08f,-0.15f,0.15f);
+        }
+
         HandleCoinReward();
     }
 
     public void MoveRight()
     {
         if(CanMoveRight())
+        {
             Player.position += Vector3.right;
-        
+            SoundService.PlaySound(tickClip,0.08f,-0.15f,0.15f);
+        }
         HandleCoinReward();
     }
 

@@ -1,8 +1,7 @@
 using UnityEngine;
-using DG;
 using DG.Tweening;
 using System.Collections;
-using System.Threading.Tasks;
+using GoogleMobileAds.Api;
 
 public class Menu : MonoBehaviour
 {
@@ -30,26 +29,32 @@ public class Menu : MonoBehaviour
     [Header("Components")]
     public LevelLoadManager levelLoader;
     public Transform soundParent;
+    public AdService adHandler;
 
+    private void Awake()
+    {
+        SoundService.Init(soundParent);
+        AdService.Init(adHandler);
+    }
 
     public void Start()
     {
         Application.targetFrameRate = 120;
-        SoundService.Init(soundParent);
-        
         menuUtility = new();
         menuUtility.Instance = this;
         menuUtility.PlayMenuIntro();
 
         levelUtility = new();
         levelUtility.Instance = this;
+
+        AdService.ShowInterstitial();
     }
 
     public void ReturnToMenuFromLevelSelect()
     {
         IEnumerator IAction()
         {
-            SoundService.PlaySound(audios[0]);
+            SoundService.PlaySound(audios[0],0.35f);
             yield return swapAnimation.DOFade(1, 0.65f).WaitForCompletion();
             yield return new WaitForSeconds(0.75f);
             levelScreen.alpha = 0;
@@ -65,13 +70,13 @@ public class Menu : MonoBehaviour
 
     public void LevelButton(string level)
     {
-        SoundService.PlaySound(audios[0]);
+        SoundService.PlaySound(audios[0],0.35f);
         levelUtility.OnLevelSelect(int.Parse(level));
     }
 
     public async void LevelSelectButton()
     {
-        SoundService.PlaySound(audios[0]);
+        SoundService.PlaySound(audios[0],0.35f);
         swapAnimation.DOFade(1,0.25f);
 
         await swapAnimation.DOFade(1,0.65f)
