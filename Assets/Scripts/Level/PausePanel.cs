@@ -50,16 +50,23 @@ public class PausePanel : MonoBehaviour
 
     public void Pause()
     {
+        isOpen = true;
         player.StopPlaying();
         camera2D.EndAction();
+    }
+
+    public void Continue()
+    {   
+        isOpen = false;
+        pauseCanvas.alpha = 0;
+        pauseCanvas.blocksRaycasts = false;
+        StartCoroutine(gameplay.ICountDown());
     }
 
     public void PauseButton()
     {
         if(isOpen)
             return;
-        
-        isOpen = true;
 
         Pause();
 
@@ -144,13 +151,5 @@ public class PausePanel : MonoBehaviour
         }
 
         StartCoroutine(IAction());
-    }
-
-    public void Continue()
-    {   
-        isOpen = false;
-        pauseCanvas.alpha = 0;
-        pauseCanvas.blocksRaycasts = false;
-        StartCoroutine(gameplay.ICountDown());
     }
 }

@@ -691,7 +691,6 @@ MonoBehaviour:
   panel: {fileID: 98829448}
   canvasGroup: {fileID: 98829451}
   buttonImg: {fileID: 576356283}
-  button: {fileID: 576356282}
   moveDuration: 0.7
   fillDuration: 5
 --- !u!1 &99945882
@@ -1872,8 +1871,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1752950711}
         m_TargetAssemblyTypeName: ShopPanel, Assembly-CSharp
-        m_MethodName: BuyButton
-        m_Mode: 3
+        m_MethodName: AdButton
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

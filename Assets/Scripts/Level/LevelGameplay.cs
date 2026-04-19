@@ -33,6 +33,10 @@ public class LevelGameplay : MonoBehaviour
     [SerializeField] private TextMeshProUGUI skillCountText;
 
     public bool levelReset;
+    private bool countDown1;
+    private bool countDown2;
+
+    private Tween powerupTween;
 
     private void Start()
     {
@@ -42,17 +46,17 @@ public class LevelGameplay : MonoBehaviour
 
     public IEnumerator ICountDown()
     {
-        bool completed = false;
-        yield return levelText.StartCoroutine(levelText.ICountDown(() => completed = true));
-        if (!completed)
+        countDown1 = true;
+        countDown2 = true;
+        yield return levelText.StartCoroutine(levelText.ICountDown(() => countDown1 = false));
+        if (countDown1)
             yield break;
 
         player.StartPlaying();
         levelCamera.StartAction();
 
-        completed = false;
-        StartCoroutine(levelText.IMoveUpward(() => completed = true));
-        if (!completed)
+        StartCoroutine(levelText.IMoveUpward(() => countDown2 = false));
+        if (countDown2)
             yield break;
     }
 
@@ -73,26 +77,26 @@ public class LevelGameplay : MonoBehaviour
 
         float fastSpeed = 0.15f;
         float slowSpeed = 0.6f;
-        
-        Tween fadeTween;
-        powerupImage.DOKill();
 
+        if(powerupTween != null && powerupTween.IsPlaying())
+            yield break;
+            
         void StartFadeLoop()
         {
             float targetAlpha = powerupImage.color.a > 0.8f ? 0.6f : 1f;
             float speed = remainingPowerupTime < warningTime ? fastSpeed : slowSpeed;
 
-            fadeTween = powerupImage.DOFade(targetAlpha, speed)
+            powerupTween = powerupImage.DOFade(targetAlpha, speed)
                 .SetEase(Ease.Linear)
                 .OnComplete(StartFadeLoop);
         }
 
         StartFadeLoop();
 
-        while(remainingPowerupTime > 0 && fadeTween.IsPlaying())
+        while(remainingPowerupTime > 0 && powerupTween.IsPlaying())
         {
             yield return null;
-            if(pausePanel.isOpen)
+            if(pausePanel.isOpen || countDown1)
                 continue;
 
             remainingPowerupTime -= Time.deltaTime;
@@ -101,6 +105,7 @@ public class LevelGameplay : MonoBehaviour
 
         powerupElement.alpha = 0;
         powerupImage.DOKill();
+        powerupTween = null;
     }
 
     public bool OnPlayerDeath()
@@ -109,7 +114,7 @@ public class LevelGameplay : MonoBehaviour
             return false;
         
         levelCamera.DoFollow = false;
-        StartCoroutine(OnGameOver());
+        OnGameOver();
         return true;
     }
 
@@ -144,20 +149,26 @@ public class LevelGameplay : MonoBehaviour
         levelCamera.EndAction();
     }
 
-    public IEnumerator OnGameOver()
+    private IEnumerator IRevive()
     {
-        bool revived = false;
-        yield return StartCoroutine(loseCanvas.WaitResponse(() => revived = true));
+        yield return StartCoroutine(ICountDown());
+        StartCoroutine(ActivatePowerup());
+    }
 
-        if (revived)
+    private IEnumerator IRestart()
+    {
+        yield return levelLoader.CreateLevel(lastLoadedLevel);
+        levelLoader.ReadyLevel(lastLoadedLevel);
+    }
+
+    public void OnGameOver()
+    {
+        loseCanvas.ShowReviveUI(revived =>
         {
-            StartPlayingLevel(lastLoadedLevel);
-            yield return StartCoroutine(ICountDown());
-            yield return StartCoroutine(ActivatePowerup());
-        }
-        else {
-            yield return levelLoader.CreateLevel(lastLoadedLevel);
-            levelLoader.ReadyLevel(lastLoadedLevel);
-        }
+            if (revived)
+                StartCoroutine(IRevive());
+            else
+                StartCoroutine(IRestart());
+        });
     }
 }

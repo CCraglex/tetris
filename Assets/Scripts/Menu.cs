@@ -46,12 +46,11 @@ public class Menu : MonoBehaviour
 
         levelUtility = new();
         levelUtility.Instance = this;
-
-        AdService.ShowInterstitial();
     }
 
     public void ReturnToMenuFromLevelSelect()
     {
+        AdService.ShowInterstitial();
         IEnumerator IAction()
         {
             SoundService.PlaySound(audios[0],0.35f);
@@ -76,6 +75,7 @@ public class Menu : MonoBehaviour
 
     public async void LevelSelectButton()
     {
+        AdService.ShowInterstitial();
         SoundService.PlaySound(audios[0],0.35f);
         swapAnimation.DOFade(1,0.25f);
 

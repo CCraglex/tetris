@@ -33,7 +33,7 @@ public class GamePlayButtons : MonoBehaviour
         if (SaveStateHandler.HasCash(30))
         {
             SaveStateHandler.RemoveCash(30);
-            SaveStateHandler.AddPowerup(1);
+            SaveStateHandler.AddPowerup(3);
             SkillButton();
             return;
         }

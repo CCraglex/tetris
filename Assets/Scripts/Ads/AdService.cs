@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GoogleMobileAds.Api;
 using UnityEngine;
 
@@ -19,16 +20,31 @@ public class AdService : MonoBehaviour
     public string RewardedReviveID;
     public string RewardedCoinID;
 
-    private InterstitialAdHandler interstitial;
+    public InterstitialAdHandler interstitial;
+    private static float lastAdTimeInterstitial;
+
     public RewardedAdHandler rewardedCoin;
     public RewardedAdHandler rewardedRevive;
 
     public static AdService instance;
 
+    
+
     public static void Init(AdService A)
     {
         instance = A;
         DontDestroyOnLoad(A.gameObject);
+        
+        var requestConfiguration = new RequestConfiguration
+        {
+            TestDeviceIds = new List<string>
+            {
+                "BE0C2407EEDB38D71F5FB6B1E1CBBFD4"
+            }
+        };
+
+    MobileAds.SetRequestConfiguration(requestConfiguration);
+
         MobileAds.Initialize(status =>
         {
             if (status == null)
@@ -85,9 +101,16 @@ public class AdService : MonoBehaviour
     public static void ShowInterstitial()
     {
         if (instance == null) return;
-
-        EnterAdMode();
-        instance.interstitial.Show();
+        
+        bool randChance = UnityEngine.Random.Range(0, 100) < 75;
+        bool isAdReady = adsInitialized && instance.interstitial.LoadedAd != null && instance.interstitial.LoadedAd.CanShowAd();
+        bool timeReady = Time.time - lastAdTimeInterstitial > 60f;
+        if (randChance && isAdReady && timeReady)
+        {
+            lastAdTimeInterstitial = Time.time;
+            EnterAdMode();
+            instance.interstitial.Show();
+        }
     }
 
     public static void ShowRewardedCoin()
@@ -119,8 +142,10 @@ public class AdService : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    public static void ExitAdMode()
+    public static async void ExitAdMode()
     {
+        await Awaitable.MainThreadAsync();
+
         if (!isAdShowing) return;
 
         isAdShowing = false;

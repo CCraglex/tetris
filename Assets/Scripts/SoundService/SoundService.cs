@@ -80,7 +80,6 @@ public static class SoundService
             Channels.TryDequeue(out res);
         }
 
-        Debug.Log(volume);
         res.volume = volume;
         res.pitch = pitchLow != 0 || pitchHigh != 0 ? Random.Range(1 + pitchLow,1 + pitchHigh) : 1;
         res.clip = Clip;

@@ -20,9 +20,31 @@ public class ShopPanel : MonoBehaviour
         pausePanel.Continue();
     }
 
-    public void AdButton()
+    private void CleanupAd()
+    {
+        AdService.instance.rewardedCoin.OnRewardedAction -= AdSuccess;
+        AdService.instance.rewardedCoin.OnClosedAction -= AdFail;
+        AdService.instance.rewardedCoin.OnFailedAction -= AdFail;
+        AdService.instance.rewardedCoin.Cleanup();
+    }
+
+    private void AdSuccess()
     {
         SaveStateHandler.AddPowerup(1);
+        CleanupAd();
+    }
+
+    private void AdFail()
+    {
+        CleanupAd();
+    }
+
+    public void AdButton()
+    {
+        AdService.instance.rewardedCoin.OnRewardedAction += AdSuccess;
+        AdService.instance.rewardedCoin.OnClosedAction += AdFail;
+        AdService.instance.rewardedCoin.OnFailedAction += AdFail;
+        AdService.ShowRewardedCoin();
     }
 
     public void BuyButton(int amount)
