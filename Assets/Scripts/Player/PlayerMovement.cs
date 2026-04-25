@@ -174,7 +174,7 @@ public class PlayerMovement : MonoBehaviour
     
     public void OnDrawGizmos()
     {
-        if(EnableDebug == false)
+        if(EnableDebug == false || playerTiles == null)
             return;
 
         Gizmos.color = Color.black;

@@ -30,6 +30,7 @@ public class ShopPanel : MonoBehaviour
 
     private void AdSuccess()
     {
+        Debug.LogWarning("Powerup Added!");
         SaveStateHandler.AddPowerup(1);
         CleanupAd();
     }

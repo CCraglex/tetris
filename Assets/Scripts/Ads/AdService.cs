@@ -28,8 +28,6 @@ public class AdService : MonoBehaviour
 
     public static AdService instance;
 
-    
-
     public static void Init(AdService A)
     {
         instance = A;
@@ -43,19 +41,23 @@ public class AdService : MonoBehaviour
             }
         };
 
-    MobileAds.SetRequestConfiguration(requestConfiguration);
+        MobileAds.SetRequestConfiguration(requestConfiguration);
 
         MobileAds.Initialize(status =>
         {
-            if (status == null)
+            MainThreadDispatcher.Run(() =>
             {
-                Debug.LogError("Ads init failed");
-                return;
-            }
+                if (status == null)
+                {
+                    Debug.LogError("Ads init failed");
+                    return;
+                }
 
-            adsInitialized = true;
-            Debug.Log("Ads initialized");
-            instance.SetupAds();
+                adsInitialized = true;
+                Debug.Log("Ads initialized");
+                instance.SetupAds();
+                RefillAds();
+            });
         });
     }
 
@@ -87,16 +89,20 @@ public class AdService : MonoBehaviour
 
         rewardedRevive.OnClosedAction += ExitAdMode;
         rewardedRevive.OnFailedAction += ExitAdMode;
-
-        // Preload all
-        interstitial.LoadAd();
-        rewardedCoin.LoadAd();
-        rewardedRevive.LoadAd();
     }
 
     // -----------------------
     // Public API
     // -----------------------
+    public static void RefillAds()
+    {
+        if(instance.interstitial.LoadedAd == null)
+            instance.interstitial.LoadAd();
+        if(instance.rewardedCoin.LoadedAd == null)
+            instance.rewardedCoin.LoadAd();
+        if(instance.rewardedRevive.LoadedAd == null)
+            instance.rewardedRevive.LoadAd();
+    }
 
     public static void ShowInterstitial()
     {

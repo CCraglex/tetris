@@ -99,35 +99,15 @@ public class CoinHandler : MonoBehaviour
         }
     }
 
-    private float GetSafeSpot(int y,List<Vector3Int> FreeTiles)
-    {
-        var validTiles = FreeTiles.Where(v => v.y == y).ToList();
-        var pos = validTiles[UnityEngine.Random.Range(0,validTiles.Count)];
-        FreeTiles.Remove(pos);
-        return pos.x;
-    }
-
-    public List<Vector2Int> SpawnCoins(Tilemap Level)
+    public List<Vector2Int> SpawnCoins(Vector3Int[] coins)
     {
         List<Vector2Int> retTiles = new();
-        List<Vector3Int> tiles = new();
-        var bounds = Level.cellBounds;
-
-        foreach (var item in bounds.allPositionsWithin)
-        {
-            if(Level.GetTile(item) == null)
-                tiles.Add(item);
-        }
-
 
         ClearCoins();
-        for (int y = bounds.min.y; y < bounds.max.y - 3; y++)
+        foreach (var spot in coins)
         {
-            if(UnityEngine.Random.Range(0,1f) > .1f)
-                continue;
-
             var next = Coins.Dequeue();
-            next.Position = new(GetSafeSpot(y,tiles),y);
+            next.Position = new(spot.x,spot.y);
             next.Instance.SetActive(true);
             retTiles.Add(new((int)next.Position.x,(int)next.Position.y));
             ActiveCoins.Add(next);

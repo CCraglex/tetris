@@ -35,7 +35,7 @@ public class LevelSO : ScriptableObject
         }
     }
 
-    private Vector3Int[] GetSpots(string tileName)
+    public Vector3Int[] GetSpots(string tileName)
     {
         return Tiles
             .Where(tile => tile.tileToUse == tileName)
@@ -65,7 +65,8 @@ public class LevelSO : ScriptableObject
             flagSpots.Select(_ => flagTile).ToArray()
         );
 
-        tilemap.CompressBounds();
+        var coinSpots = GetSpots("Coin");
+        GameObject.FindAnyObjectByType<CoinHandler>().SpawnCoins(coinSpots);
 
         BoundsInt cellBounds = tilemap.cellBounds;
 

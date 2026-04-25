@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
         ClearTiles();
         var Data = AssetLoader.GetCurrentLevel().GetPlayerTiles(out Vector2 spawn);
         transform.position = spawn;
+        transform.rotation = Quaternion.Euler(0,0,0);
         movement.InitTiles(Data);
         CreateTile(Vector2.zero);
         for (int i = 0; i < Data.Length - 1; i++)

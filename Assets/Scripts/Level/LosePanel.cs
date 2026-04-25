@@ -68,19 +68,16 @@ public class LosePanel : MonoBehaviour
     {
         rewarded = false;
         var ad = AdService.instance.rewardedRevive;
-
-        // IMPORTANT: subscribe BEFORE showing ad
+        print(ad == null);
+        
+        AdService.ShowRewardedRevive();
         ad.OnRewardedAction += OnAdRewarded;
         ad.OnClosedAction += OnAdClosed;
         ad.OnFailedAction += OnAdClosed;
-
-        AdService.ShowRewardedRevive();
     }
 
     private void OnAdRewarded()
-    {
-        rewarded = true;
-    }
+        => rewarded = true;
 
     private void OnAdClosed()
     {
@@ -88,8 +85,9 @@ public class LosePanel : MonoBehaviour
 
         if (onSuccessCallback == null)
             return;
-
+            
         onSuccessCallback.Invoke(rewarded);
+        rewarded = false;
         onSuccessCallback = null;
         StartCoroutine(IClearPanel());
     }

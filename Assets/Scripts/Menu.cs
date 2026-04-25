@@ -169,7 +169,6 @@ public class LevelUtility
 
     public async void OnLevelSelect(int Level)
     {
-        Instance.loadingScreen.gameObject.SetActive(true);
         await Instance.loadingScreen.DOFade(1,1.25f)
             .AsyncWaitForCompletion();
 
@@ -184,7 +183,6 @@ public class LevelUtility
         await Instance.loadingScreen.DOFade(0,1.25f)
             .AsyncWaitForCompletion();
         
-        Instance.loadingScreen.gameObject.SetActive(false);
         Instance.levelLoader.ReadyLevel(Level);
     }
 }

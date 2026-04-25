@@ -35,7 +35,7 @@ public class LevelTextHandler : MonoBehaviour
     
     public IEnumerator ICountDown(Action A)
     {
-        text.color = new Color(0.95f, 0.95f, 0.95f, 0.2f); 
+        text.color = new Color(0.1f, 0.1f, 0.1f, 0.5f); 
         var rect = transform as RectTransform;
         rect.anchoredPosition = StartPos;
         text.text = "3";
@@ -56,8 +56,6 @@ public class LevelTextHandler : MonoBehaviour
 
     public IEnumerator IMoveUpward(Action A)
     {
-        print("Move up");
-
         var rect = transform as RectTransform;
         rect.anchoredPosition = StartPos;
 

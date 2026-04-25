@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets;
+using System.IO;
 
 
 [CustomEditor(typeof(LevelEngine))]
@@ -13,7 +14,7 @@ public class LevelEditor : Editor
 {
     private int customID;
     private int levelID;
-    private int Difficulty;
+    private int Difficulty = 1;
 
     private List<Vector3Int> GetSpots(Tilemap Tiles,string tileName)
     {
@@ -34,6 +35,10 @@ public class LevelEditor : Editor
 
     private void CreateNewLevelAsset(int ID)
     {
+        if(Difficulty == 0)
+            throw new InvalidDataException("Difficulty value can't be 0!");
+        if(ID < 1)
+            throw new InvalidDataException("Level ID can't be lower than 1!");
         LevelSO newLevel = CreateInstance<LevelSO>();
         newLevel.TimePerStep = Difficulty;
         
@@ -44,6 +49,7 @@ public class LevelEditor : Editor
         HandleTile(newLevel,"Flag");
         HandleTile(newLevel,"Player");
         HandleTile(newLevel,"PlayerRoot");
+        HandleTile(newLevel,"Coin");
 
         newLevel.levelWidth = map.cellBounds.size.x;
         newLevel.levelHeight = map.cellBounds.size.y;

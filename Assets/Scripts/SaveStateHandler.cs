@@ -17,14 +17,20 @@ public static class SaveStateHandler
     public static void Load()
     {
         var fullPath = Application.persistentDataPath + Path;
+
         if (File.Exists(fullPath))
         {
             string data = File.ReadAllText(fullPath);
-            if(data != string.Empty)
+
+            if (!string.IsNullOrEmpty(data))
+            {
                 currentdata = JsonUtility.FromJson<SaveData>(data);
+                return; // stop here if load succeeded
+            }
         }
-            
-        currentdata = new()
+
+        // Only runs if no valid save file
+        currentdata = new SaveData
         {
             cash = 10,
             MaxLevel = 1,
@@ -41,8 +47,8 @@ public static class SaveStateHandler
     public static int GetMaxLevel()
         => currentdata.MaxLevel;
     
-    public static void FinishLevel(){
-        currentdata.MaxLevel += 1;
+    public static void FinishLevel(int level){
+        currentdata.MaxLevel = Math.Max(currentdata.MaxLevel,level);
         Save();
     }
 

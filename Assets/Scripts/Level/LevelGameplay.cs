@@ -13,6 +13,7 @@ public class LevelGameplay : MonoBehaviour
     [SerializeField] private LevelLoadManager levelLoader;
     [SerializeField] private LosePanel loseCanvas;
     [SerializeField] private PausePanel pausePanel;
+    [SerializeField] private WinPanel winPanel;
 
     [SerializeField] private CanvasGroup winCanvas;
     [SerializeField] private CanvasGroup swapCanvas;
@@ -32,7 +33,6 @@ public class LevelGameplay : MonoBehaviour
     [SerializeField] private LevelHypeTextHandler hypeText;
     [SerializeField] private TextMeshProUGUI skillCountText;
 
-    public bool levelReset;
     private bool countDown1;
     private bool countDown2;
 
@@ -46,18 +46,22 @@ public class LevelGameplay : MonoBehaviour
 
     public IEnumerator ICountDown()
     {
+        pausePanel.isOpen = false;
         countDown1 = true;
         countDown2 = true;
+
         yield return levelText.StartCoroutine(levelText.ICountDown(() => countDown1 = false));
         if (countDown1)
             yield break;
 
         player.StartPlaying();
         levelCamera.StartAction();
-
+        
         StartCoroutine(levelText.IMoveUpward(() => countDown2 = false));
         if (countDown2)
             yield break;
+        
+        
     }
 
     public void StartPlayingLevel(int levelID)
@@ -112,7 +116,8 @@ public class LevelGameplay : MonoBehaviour
     {
         if(remainingPowerupTime > 0)
             return false;
-        
+
+        pausePanel.isOpen = true;
         levelCamera.DoFollow = false;
         OnGameOver();
         return true;
@@ -122,6 +127,8 @@ public class LevelGameplay : MonoBehaviour
     {
         IEnumerator WinSequence()
         {
+            pausePanel.isOpen = true;
+            SaveStateHandler.FinishLevel(lastLoadedLevel);
             yield return StartCoroutine(hypeText.PlayWin());
             gameCanvas.blocksRaycasts = false;
 
@@ -130,6 +137,7 @@ public class LevelGameplay : MonoBehaviour
 
             yield return new WaitForSeconds(0.25f);
             ClearGame();
+            winPanel.Enable();
             gameCanvas.alpha = 0;            
             winCanvas.alpha = 1;
             winCanvas.blocksRaycasts = true;

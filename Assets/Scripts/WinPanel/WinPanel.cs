@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WinPanel : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class WinPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI offerText;
     [SerializeField] private TextMeshProUGUI rewardText;
     [SerializeField] private ParticleSystem particles;
+    [SerializeField] private Button adButton;
 
     [Header("Canvases")]
     [SerializeField] private CanvasGroup menuCanvas;
@@ -50,10 +52,11 @@ public class WinPanel : MonoBehaviour
     [SerializeField] private float timeBetweenObjects;
 
 
-    public void OnEnable()
+    public void Enable()
     {
         IEnumerator PlayAnim()
         {
+            adButton.interactable = true;
             offerText.text = $"Earned <sprite index= 0>: {gameplayData.collectedCashThisRound}\n<size=50%>Watch an ad to double?</size>";
             rewardText.gameObject.SetActive(false);
             var waitTimer = new WaitForSeconds(timeBetweenObjects);
@@ -68,28 +71,40 @@ public class WinPanel : MonoBehaviour
         StartCoroutine(PlayAnim());
     }
 
-    public void OnDisable()
+    public void Disable()
     {
         foreach (var item in uiObjects)
             item.localScale = Vector3.zero;
     }
 
+    public void AdButton()
+    {
+        var ad = AdService.instance.rewardedCoin;      
+        AdService.ShowRewardedCoin();
+        ad.OnRewardedAction += RewardPlayer;
+    }
+
+    private void CleanAd()
+    {
+        var ad = AdService.instance.rewardedCoin;
+        ad.OnRewardedAction -= RewardPlayer;
+        ad.Cleanup();
+    }
+
     public void RewardPlayer()
     {
-        bool didWatchAd = true;
-
-        IEnumerator DelayedReward()
+        IEnumerator IAction()
         {
+            adButton.interactable = false;
+            SaveStateHandler.AddCash(gameplayData.collectedCashThisRound);
+            CleanAd();
             yield return new WaitForSeconds(0.5f);
             rewardText.gameObject.SetActive(true);
             PlayPopup(rewardText.rectTransform);
             particles.Play();
         }
-        if (didWatchAd)
-        {
-            StartCoroutine(DelayedReward());
-            SaveStateHandler.AddCash(gameplayData.collectedCashThisRound);
-        }
+
+        StartCoroutine(IAction());
     }
 
 
@@ -100,9 +115,11 @@ public class WinPanel : MonoBehaviour
         yield return swapCanvas.DOFade(1,0.65f)
             .WaitForCompletion();
 
+        print("Fade Finish");
         var handle = levelLoader.CreateLevel(level);
         yield return new WaitUntil(() => handle.IsCompleted);
 
+        Disable();
         winCanvas.alpha = 0;
         gameCanvas.alpha = 1;
         gameCanvas.blocksRaycasts = true;
@@ -128,6 +145,7 @@ public class WinPanel : MonoBehaviour
             yield return swapCanvas.DOFade(1,0.65f)
                 .WaitForCompletion();
 
+            Disable();
             yield return new WaitForSeconds(0.25f);
             winCanvas.alpha = 0;
             menuCanvas.alpha = 1;

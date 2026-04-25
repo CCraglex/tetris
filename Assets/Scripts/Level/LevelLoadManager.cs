@@ -22,12 +22,17 @@ public class LevelLoadManager : MonoBehaviour
     public async Task CreateLevel(int levelID)
     {   
         levelData = await AssetLoader.LoadLevel(levelID);
+        Vector3Int[] coinSpots = levelData.GetSpots("Coin");
+        print(coinSpots.Length);
+        collisionHandler.UpdateCoins(coinSpots);
+
+        await Task.Yield();
         await levelData.PlaceTiles(Map);
 
+        print("?");
         collisionHandler.SetupData(Player,levelData);
         cameraHandler.UpdateCameraStats(levelData);
         levelGameplay.lastLoadedLevel = levelID;
-        collisionHandler.UpdateCoins(coinHandler.SpawnCoins(Map));
     }
 
     public void ReadyLevel(int levelID)

@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class InterstitialAdHandler : IAd
 {
-    public InterstitialAd LoadedAd {get; set;}
-    public string ID {get; set;}
+    public InterstitialAd LoadedAd { get; private set; }
+    public string ID { get; set; }
 
     public Action OnClosedAction;
     public Action OnFailedAction;
@@ -19,21 +19,26 @@ public class InterstitialAdHandler : IAd
             return;
 
         isLoadingAd = true;
+
         var request = new AdRequest();
 
         InterstitialAd.Load(ID, request, (ad, error) =>
         {
-            if (error != null || ad == null)
+            MainThreadDispatcher.Run(() =>
             {
                 isLoadingAd = false;
-                _ = Retry(() => LoadAd(attempt + 1), attempt);
-                return;
-            }
-            
-            LoadedAd = ad;
-            LoadedAd.OnAdFullScreenContentClosed += OnClosed;
-            LoadedAd.OnAdFullScreenContentFailed += OnFailed;
-            isLoadingAd = false;
+
+                if (error != null || ad == null)
+                {
+                    _ = Retry(() => LoadAd(attempt + 1), attempt);
+                    return;
+                }
+
+                LoadedAd = ad;
+
+                LoadedAd.OnAdFullScreenContentClosed += OnClosed;
+                LoadedAd.OnAdFullScreenContentFailed += OnFailed;
+            });
         });
     }
 
@@ -44,8 +49,10 @@ public class InterstitialAdHandler : IAd
 
         if (attempt >= 5)
         {
-            await Awaitable.MainThreadAsync();
-            Debug.LogWarning("Ad load failed after max retries.");
+            MainThreadDispatcher.Run(() =>
+            {
+                Debug.LogWarning("Ad load failed after max retries.");
+            });
             return;
         }
 
@@ -53,9 +60,11 @@ public class InterstitialAdHandler : IAd
         int delayMs = (int)(delaySeconds * 1000);
 
         await Task.Delay(delayMs);
-        await Awaitable.MainThreadAsync();
 
-        retryAction();
+        MainThreadDispatcher.Run(() =>
+        {
+            retryAction();
+        });
     }
 
     public void Show()
@@ -74,14 +83,20 @@ public class InterstitialAdHandler : IAd
 
     public void OnClosed()
     {
-        OnClosedAction?.Invoke();
-        Cleanup();
+        MainThreadDispatcher.Run(() =>
+        {
+            OnClosedAction?.Invoke();
+            Cleanup();
+        });
     }
 
-    public void OnFailed(AdError _)
+    public void OnFailed(AdError error)
     {
-        OnFailedAction?.Invoke();
-        Cleanup();
+        MainThreadDispatcher.Run(() =>
+        {
+            OnFailedAction?.Invoke();
+            Cleanup();
+        });
     }
 
     public void Cleanup()
@@ -94,6 +109,7 @@ public class InterstitialAdHandler : IAd
             LoadedAd.Destroy();
             LoadedAd = null;
         }
+
         LoadAd();
     }
 }

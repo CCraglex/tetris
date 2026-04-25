@@ -8,7 +8,9 @@
 ++ Create sound service
 - Create shop UI
 -- Add Coin purchases
--- Add Coin ad offer
--- Add powerup purchases
--- Implement shop menu navigation
+++ Add Coin ad offer
+++ Add powerup purchases
+++ Implement shop menu navigation
 
+- Rare argument out reference at getsafespot in coinhandler
+- Can pause the game after thegame has been won, causing menus to stack

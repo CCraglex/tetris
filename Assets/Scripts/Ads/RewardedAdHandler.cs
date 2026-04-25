@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class RewardedAdHandler : IAd
 {
-    public RewardedAd LoadedAd {get; set;}
-    public string ID {get; set;}
+    public RewardedAd LoadedAd { get; private set; }
+    public string ID { get; set; }
 
     public Action OnRewardedAction;
     public Action OnClosedAction;
@@ -20,21 +20,26 @@ public class RewardedAdHandler : IAd
             return;
 
         isLoadingAd = true;
+
         var request = new AdRequest();
 
         RewardedAd.Load(ID, request, (ad, error) =>
         {
-            if (error != null || ad == null)
+            MainThreadDispatcher.Run(() =>
             {
                 isLoadingAd = false;
-                _ = Retry(() => LoadAd(attempt + 1), attempt);
-                return;
-            }
 
-            LoadedAd = ad;
-            LoadedAd.OnAdFullScreenContentClosed += OnClosed;
-            LoadedAd.OnAdFullScreenContentFailed += OnFailed;
-            isLoadingAd = false;
+                if (error != null || ad == null)
+                {
+                    _ = Retry(() => LoadAd(attempt + 1), attempt);
+                    return;
+                }
+
+                LoadedAd = ad;
+                
+                LoadedAd.OnAdFullScreenContentClosed += OnClosed;
+                LoadedAd.OnAdFullScreenContentFailed += OnFailed;
+            });
         });
     }
 
@@ -45,18 +50,20 @@ public class RewardedAdHandler : IAd
 
         if (attempt >= 5)
         {
-            await Awaitable.MainThreadAsync();
-            Debug.LogWarning("Ad load failed after max retries.");
+            MainThreadDispatcher.Run(() =>
+            {
+                Debug.LogWarning("Ad load failed after max retries.");
+            });
             return;
         }
 
-        float delaySeconds = Mathf.Pow(2, attempt);
-        int delayMs = (int)(delaySeconds * 1000);
+        float delay = Mathf.Pow(2, attempt);
+        await Task.Delay((int)(delay * 1000));
 
-        await Task.Delay(delayMs);
-        await Awaitable.MainThreadAsync();
-
-        retryAction();
+        MainThreadDispatcher.Run(() =>
+        {
+            retryAction();
+        });
     }
 
     public void Show()
@@ -64,11 +71,13 @@ public class RewardedAdHandler : IAd
         if (LoadedAd != null && LoadedAd.CanShowAd())
         {
             AdService.EnterAdMode();
-            LoadedAd.Show(async reward =>
+
+            LoadedAd.Show(reward =>
             {
-                await Awaitable.MainThreadAsync();
-                Debug.Log("?");
-                OnRewardedAction?.Invoke();
+                MainThreadDispatcher.Run(() =>
+                {
+                    OnRewardedAction?.Invoke();
+                });
             });
         }
         else
@@ -80,14 +89,20 @@ public class RewardedAdHandler : IAd
 
     public void OnClosed()
     {
-        OnClosedAction?.Invoke();
-        Cleanup();
+        MainThreadDispatcher.Run(() =>
+        {
+            OnClosedAction?.Invoke();
+            Cleanup();
+        });
     }
 
-    public void OnFailed(AdError _)
+    public void OnFailed(AdError error)
     {
-        OnFailedAction?.Invoke();
-        Cleanup();
+        MainThreadDispatcher.Run(() =>
+        {
+            OnFailedAction?.Invoke();
+            Cleanup();
+        });
     }
 
     public void Cleanup()
@@ -100,6 +115,7 @@ public class RewardedAdHandler : IAd
             LoadedAd.Destroy();
             LoadedAd = null;
         }
+
         LoadAd();
     }
 }

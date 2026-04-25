@@ -15,14 +15,68 @@ MonoBehaviour:
   m_GroupName: Levels
   m_GUID: 7379912f116722425991b8109f2f7546
   m_SerializeEntries:
+  - m_GUID: 1117fa96b0e0b1acb886be9fbb2736aa
+    m_Address: Level-6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 125c3207f8ca4cd93994d506a15c51bf
+    m_Address: Level-8
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3e91d366d2e459124b57f96598c27486
     m_Address: Assets/Addressables/Levels
     m_ReadOnly: 0
     m_SerializedLabels:
     - default
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 55f35082e66e697a68a594484334152a
+    m_Address: Level-4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5aaabcb6d5cb025119f9392629bfc039
+    m_Address: Level-10
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b759f661e0d12b4d3a806b5188633798
+    m_Address: Level-5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d3f0caaf56aad7714a2a097de7731d8a
+    m_Address: Level-3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc30a99c38c7f652c97081cf13337b14
+    m_Address: Level-9
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e3761ed83f06b0885b23c7ae3379e655
     m_Address: Level-1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec3a3620e4e16ea3e88f3792580323fd
+    m_Address: Level-2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Level
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3a90a42ab62b6b73bdbd98669e5a39e
+    m_Address: Level-7
     m_ReadOnly: 0
     m_SerializedLabels:
     - Level

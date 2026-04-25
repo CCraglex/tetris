@@ -32,8 +32,17 @@ public class LevelCollisionHandler : MonoBehaviour
         playerTiles = player.GeneratePlayer();
     }
 
-    public void UpdateCoins(List<Vector2Int> positions)
-        => coinGridPositions = positions;
+    public void UpdateCoins(Vector3Int[] positions)
+    {
+        int count = positions.Length;
+        coinGridPositions = new List<Vector2Int>(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            var p = positions[i];
+            coinGridPositions.Add(new Vector2Int(p.x, p.y));
+        }
+    }
 
     public bool CanLandHere(Vector2 pPos)
     {
