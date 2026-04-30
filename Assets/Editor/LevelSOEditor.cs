@@ -17,7 +17,7 @@ public class LevelSOEditor : Editor
 
         EditorGUILayout.LabelField("Tile Count", level.Tiles.Count.ToString());
 
-        float totalSeconds = level.TimePerStep * level.levelHeight;
+        float totalSeconds = level.StepsPerSecond * level.levelHeight;
         TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
 
         EditorGUILayout.LabelField(
@@ -29,7 +29,7 @@ public class LevelSOEditor : Editor
 
         float sizeFactor = 1f + (level.levelWidth * 0.05f);
 
-        float speedRatio = 1f / level.TimePerStep;
+        float speedRatio = 1f / level.StepsPerSecond;
         float speedFactor = Mathf.Pow(2f, speedRatio);
 
         float difficulty =

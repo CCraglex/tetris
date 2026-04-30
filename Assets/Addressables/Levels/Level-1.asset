@@ -194,4 +194,4 @@ MonoBehaviour:
     tileToUse: Coin
   - position: {x: 0, y: 21, z: 0}
     tileToUse: Coin
-  TetrisBlockData: {fileID: 11400000, guid: 44c3087813f468af5a78a9f6982455c6, type: 2}
+  TetrisBlockData: {fileID: 11400000, guid: b5daad1af2326c2c28abbd4fc783fa9c, type: 2}

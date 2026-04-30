@@ -15,14 +15,14 @@ MonoBehaviour:
   m_GroupName: LevelTilepacks
   m_GUID: 89d619d167ff7ccebb3671428b88a6b6
   m_SerializeEntries:
-  - m_GUID: 58bcb9c1fe10deb53a4613cd9a982a82
+  - m_GUID: 4e8149e45da7118be81ec1ff9afee7ef
     m_Address: Level_Tiles_1
     m_ReadOnly: 0
     m_SerializedLabels:
     - LevelTilepack
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: aeed794d62b150a40a8490e0581f3b97
-    m_Address: Assets/Addressables/LevelTiles
+  - m_GUID: 58bcb9c1fe10deb53a4613cd9a982a82
+    m_Address: Level_Tiles_0
     m_ReadOnly: 0
     m_SerializedLabels:
     - LevelTilepack

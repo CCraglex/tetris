@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "Level")]
@@ -12,7 +13,9 @@ public class LevelSO : ScriptableObject
     public int levelWidth;
     public int levelHeight;
 
-    public float TimePerStep;
+    [FormerlySerializedAs("TimePerStep")]
+    public float StepsPerSecond;
+    
     public List<LevelTile> Tiles;
     public TetrisBlockSO TetrisBlockData;
     

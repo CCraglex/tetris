@@ -32,17 +32,22 @@ public class LevelCamera : MonoBehaviour
         DoFollow = false;   
     }
 
-
     public IEnumerator MovementAction()
     {
-        Vector3 speed = new(0,1 / AssetLoader.GetCurrentLevel().TimePerStep,0);
+        float smooth = 1f / AssetLoader.GetCurrentLevel().StepsPerSecond;
+
         while (DoFollow && transform.position.y > lowerLimit)
         {
+            if (followTarget.position.y <= transform.position.y)
+            {
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    transform.position + Vector3.down,
+                    smooth * Time.deltaTime
+                );
+            }
+
             yield return null;
-            if(followTarget.position.y > transform.position.y)
-                continue;
-                
-            transform.Translate(-speed * Time.deltaTime);
         }
     }
 }

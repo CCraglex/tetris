@@ -14,7 +14,7 @@ public class LevelEditor : Editor
 {
     private int customID;
     private int levelID;
-    private int Difficulty = 1;
+    private float Difficulty = 1;
 
     [SerializeField] TetrisBlockSO blockToUse;
 
@@ -53,7 +53,7 @@ public class LevelEditor : Editor
             throw new InvalidDataException("There needs to be at least one player root tile!");
 
         LevelSO newLevel = CreateInstance<LevelSO>();
-        newLevel.TimePerStep = Difficulty;
+        newLevel.StepsPerSecond = Difficulty;
         newLevel.TetrisBlockData = blockToUse;
         
         HandleTile(newLevel,"Wall");
@@ -150,7 +150,7 @@ public class LevelEditor : Editor
         
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Difficulty (steps per sec):");
-        Difficulty = EditorGUILayout.IntField(Difficulty);
+        Difficulty = EditorGUILayout.FloatField(Difficulty);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();

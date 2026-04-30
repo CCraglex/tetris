@@ -1953,7 +1953,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 5, y: 0}
+  m_AnchoredPosition: {x: 25, y: 25}
   m_SizeDelta: {x: 290, y: 50}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &417250435
@@ -1976,7 +1976,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: v0.3.0
+  m_text: v0.4.0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -17534,7 +17534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   movement: {fileID: 1320266357}
   tilePrefab: {fileID: 8580074231086937998, guid: 29e254aeb41627053aa85c1cf397cc01, type: 3}
-  tileVisual: {fileID: -1605609553, guid: 51b08d8e06c8067fe960f380c63f9073, type: 3}
+  tileVisual: {fileID: 2703858647207510409, guid: 2531f2d5d6fe2b11e8e8fdb442383fe4, type: 3}
   collisionHandler: {fileID: 1220039822}
   levelGameplay: {fileID: 1220039823}
   pivot: {x: 0, y: 0}

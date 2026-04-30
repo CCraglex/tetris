@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
     {
         movement.Active = true;
         
-        float timePerStep = 1 / AssetLoader.GetCurrentLevel().TimePerStep;
+        float timePerStep = 1 / AssetLoader.GetCurrentLevel().StepsPerSecond;
         var wait = new WaitForSeconds(timePerStep);
         
         float lockTimer = 0;

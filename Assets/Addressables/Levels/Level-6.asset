@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c64229b543a8008fbb6b7f5e64365a5b, type: 3}
-  m_Name: Level-2
+  m_Name: Level-6
   m_EditorClassIdentifier: Assembly-CSharp::LevelSO
   levelWidth: 7
-  levelHeight: 30
+  levelHeight: 40
   TimePerStep: 1
   Tiles:
   - position: {x: -3, y: 0, z: 0}
@@ -32,55 +32,63 @@ MonoBehaviour:
     tileToUse: Wall
   - position: {x: -3, y: 1, z: 0}
     tileToUse: Wall
-  - position: {x: -2, y: 1, z: 0}
-    tileToUse: Wall
-  - position: {x: 2, y: 1, z: 0}
-    tileToUse: Wall
   - position: {x: 3, y: 1, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 2, z: 0}
+    tileToUse: Wall
+  - position: {x: -2, y: 2, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 2, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 3, z: 0}
     tileToUse: Wall
+  - position: {x: -1, y: 3, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 3, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 4, z: 0}
     tileToUse: Wall
-  - position: {x: 0, y: 4, z: 0}
+  - position: {x: -2, y: 4, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 4, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 5, z: 0}
     tileToUse: Wall
+  - position: {x: 2, y: 5, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 5, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 6, z: 0}
+    tileToUse: Wall
+  - position: {x: 1, y: 6, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 6, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 7, z: 0}
     tileToUse: Wall
+  - position: {x: 2, y: 7, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 7, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 8, z: 0}
     tileToUse: Wall
-  - position: {x: 0, y: 8, z: 0}
+  - position: {x: -2, y: 8, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 8, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 9, z: 0}
     tileToUse: Wall
+  - position: {x: -1, y: 9, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 9, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 10, z: 0}
     tileToUse: Wall
+  - position: {x: -2, y: 10, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 10, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 11, z: 0}
-    tileToUse: Wall
-  - position: {x: -2, y: 11, z: 0}
     tileToUse: Wall
   - position: {x: 2, y: 11, z: 0}
     tileToUse: Wall
@@ -88,55 +96,71 @@ MonoBehaviour:
     tileToUse: Wall
   - position: {x: -3, y: 12, z: 0}
     tileToUse: Wall
+  - position: {x: 1, y: 12, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 12, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 13, z: 0}
+    tileToUse: Wall
+  - position: {x: 2, y: 13, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 13, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 14, z: 0}
     tileToUse: Wall
+  - position: {x: -2, y: 14, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 14, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 15, z: 0}
     tileToUse: Wall
-  - position: {x: 0, y: 15, z: 0}
+  - position: {x: -1, y: 15, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 15, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 16, z: 0}
     tileToUse: Wall
+  - position: {x: -2, y: 16, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 16, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 17, z: 0}
+    tileToUse: Wall
+  - position: {x: 2, y: 17, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 17, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 18, z: 0}
     tileToUse: Wall
+  - position: {x: 1, y: 18, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 18, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 19, z: 0}
+    tileToUse: Wall
+  - position: {x: 2, y: 19, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 19, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 20, z: 0}
     tileToUse: Wall
-  - position: {x: 0, y: 20, z: 0}
+  - position: {x: -2, y: 20, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 20, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 21, z: 0}
     tileToUse: Wall
+  - position: {x: -1, y: 21, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 21, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 22, z: 0}
     tileToUse: Wall
+  - position: {x: -2, y: 22, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 22, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 23, z: 0}
-    tileToUse: Wall
-  - position: {x: -2, y: 23, z: 0}
     tileToUse: Wall
   - position: {x: 2, y: 23, z: 0}
     tileToUse: Wall
@@ -144,38 +168,130 @@ MonoBehaviour:
     tileToUse: Wall
   - position: {x: -3, y: 24, z: 0}
     tileToUse: Wall
+  - position: {x: 1, y: 24, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 24, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 25, z: 0}
+    tileToUse: Wall
+  - position: {x: 2, y: 25, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 25, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 26, z: 0}
     tileToUse: Wall
-  - position: {x: 0, y: 26, z: 0}
+  - position: {x: -2, y: 26, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 26, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 27, z: 0}
     tileToUse: Wall
+  - position: {x: -1, y: 27, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 27, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 28, z: 0}
+    tileToUse: Wall
+  - position: {x: -2, y: 28, z: 0}
     tileToUse: Wall
   - position: {x: 3, y: 28, z: 0}
     tileToUse: Wall
   - position: {x: -3, y: 29, z: 0}
     tileToUse: Wall
+  - position: {x: 2, y: 29, z: 0}
+    tileToUse: Wall
   - position: {x: 3, y: 29, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 30, z: 0}
+    tileToUse: Wall
+  - position: {x: 1, y: 30, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 30, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 31, z: 0}
+    tileToUse: Wall
+  - position: {x: 2, y: 31, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 31, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 32, z: 0}
+    tileToUse: Wall
+  - position: {x: -2, y: 32, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 32, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 33, z: 0}
+    tileToUse: Wall
+  - position: {x: -1, y: 33, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 33, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 34, z: 0}
+    tileToUse: Wall
+  - position: {x: -2, y: 34, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 34, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 35, z: 0}
+    tileToUse: Wall
+  - position: {x: 2, y: 35, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 35, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 36, z: 0}
+    tileToUse: Wall
+  - position: {x: 1, y: 36, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 36, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 37, z: 0}
+    tileToUse: Wall
+  - position: {x: 2, y: 37, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 37, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 38, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 38, z: 0}
+    tileToUse: Wall
+  - position: {x: -3, y: 39, z: 0}
+    tileToUse: Wall
+  - position: {x: 3, y: 39, z: 0}
     tileToUse: Wall
   - position: {x: 0, y: 1, z: 0}
     tileToUse: Flag
-  - position: {x: 0, y: 29, z: 0}
+  - position: {x: -1, y: 39, z: 0}
     tileToUse: PlayerRoot
-  - position: {x: -2, y: 2, z: 0}
+  - position: {x: -2, y: 1, z: 0}
+    tileToUse: Coin
+  - position: {x: -1, y: 1, z: 0}
+    tileToUse: Coin
+  - position: {x: 1, y: 1, z: 0}
+    tileToUse: Coin
+  - position: {x: 2, y: 1, z: 0}
+    tileToUse: Coin
+  - position: {x: -2, y: 3, z: 0}
+    tileToUse: Coin
+  - position: {x: 2, y: 6, z: 0}
+    tileToUse: Coin
+  - position: {x: -2, y: 9, z: 0}
     tileToUse: Coin
   - position: {x: 2, y: 12, z: 0}
     tileToUse: Coin
-  - position: {x: -2, y: 22, z: 0}
+  - position: {x: -2, y: 15, z: 0}
+    tileToUse: Coin
+  - position: {x: 2, y: 18, z: 0}
+    tileToUse: Coin
+  - position: {x: -2, y: 21, z: 0}
+    tileToUse: Coin
+  - position: {x: 2, y: 24, z: 0}
+    tileToUse: Coin
+  - position: {x: -2, y: 27, z: 0}
+    tileToUse: Coin
+  - position: {x: 2, y: 30, z: 0}
+    tileToUse: Coin
+  - position: {x: -2, y: 33, z: 0}
+    tileToUse: Coin
+  - position: {x: 2, y: 36, z: 0}
     tileToUse: Coin
   TetrisBlockData: {fileID: 11400000, guid: b5daad1af2326c2c28abbd4fc783fa9c, type: 2}
