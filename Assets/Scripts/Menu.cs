@@ -2,6 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 using System.Collections;
 using GoogleMobileAds.Api;
+using TMPro;
 
 public class Menu : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class Menu : MonoBehaviour
     public AudioClip[] audios;
 
     [Header("Components")]
+    public TextMeshProUGUI messageText;
     public LevelLoadManager levelLoader;
     public Transform soundParent;
     public AdService adHandler;
@@ -71,6 +73,11 @@ public class Menu : MonoBehaviour
         levelScreen.blocksRaycasts = false;
         SoundService.PlaySound(audios[0],0.35f);
         levelUtility.OnLevelSelect(int.Parse(level));
+    }
+
+    public void StarButton()
+    {
+        Application.OpenURL("www.google.com");
     }
 
     public async void LevelSelectButton()

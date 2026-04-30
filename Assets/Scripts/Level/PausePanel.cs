@@ -32,20 +32,36 @@ public class PausePanel : MonoBehaviour
 
     public bool isOpen;
 
+    private void Start()
+    {
+        bool v = PlayerPrefs.GetInt("Sfx", 1) == 1;
+        sfxImg.sprite = v ? sfxOn : sfxOff;
+        v = PlayerPrefs.GetInt("Mus", 1) == 1;
+        sfxImg.sprite = v ? sfxOn : sfxOff;
+    }
+
     public void SetSFX()
     {
-        bool v = PlayerPrefs.GetInt("Sfx") == 1;
+        bool v = PlayerPrefs.GetInt("Sfx", 1) == 1;
+        v = !v;
+
+        PlayerPrefs.SetInt("Sfx", v ? 1 : 0);
+        PlayerPrefs.Save();
+
         sfxImg.sprite = v ? sfxOn : sfxOff;
-        PlayerPrefs.SetInt("Sfx",v ? 1 : 0);
         SaveStateHandler.Sfx = v;
     }
 
     public void SetSong()
     {
-        bool v = PlayerPrefs.GetInt("Mus") == 1;
-        musImg.sprite = v ? musOn : musOff;
-        PlayerPrefs.SetInt("Mus",v ? 1 : 0);
-        SaveStateHandler.Mus = v;
+        bool v = PlayerPrefs.GetInt("Mus", 1) == 1;
+        v = !v;
+
+        PlayerPrefs.SetInt("Mus", v ? 1 : 0);
+        PlayerPrefs.Save();
+
+        sfxImg.sprite = v ? sfxOn : sfxOff;
+        SaveStateHandler.Sfx = v;
     }
 
     public void Pause()
@@ -96,7 +112,7 @@ public class PausePanel : MonoBehaviour
         );
     }
 
-    public void ReturnToMenu()
+    public void ReturnToMenu(string Message)
     {      
         IEnumerator IAction()
         {
@@ -114,6 +130,7 @@ public class PausePanel : MonoBehaviour
             pauseCanvas.blocksRaycasts = false;
 
             menuCanvas.alpha = 1;
+            menu.messageText.text = Message;
             menuCanvas.blocksRaycasts = true;
 
             yield return new WaitForSeconds(0.25f);

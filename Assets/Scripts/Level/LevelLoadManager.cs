@@ -14,14 +14,27 @@ public class LevelLoadManager : MonoBehaviour
     
     [SerializeField] LevelCamera cameraHandler;
     [SerializeField] LevelGameplay levelGameplay;
+    [SerializeField] PausePanel pausePanel;
     [SerializeField] LevelCollisionHandler collisionHandler;
     [SerializeField] CoinHandler coinHandler;
     private LevelSO levelData;
+
+    private void LoadLastPage()
+    {
+        pausePanel.ReturnToMenu("Thank you for playing the game!\nMake sure to leave a comment and rate the game if you liked it!");
+    }
 
     public async Task CreateLevel(int levelID)
     {   
         levelGameplay.BlockPausing();
         levelData = await AssetLoader.LoadLevel(levelID);
+
+        if(levelData == null)
+        {
+            LoadLastPage();
+            return;
+        }
+            
         Vector3Int[] coinSpots = levelData.GetSpots("Coin");
         collisionHandler.UpdateCoins(coinSpots);
         await Task.Yield();

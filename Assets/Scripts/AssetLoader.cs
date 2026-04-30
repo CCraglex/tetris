@@ -1,4 +1,5 @@
 
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -47,13 +48,17 @@ public static class AssetLoader
         }
     }
 
-    public static async Task<LevelSO> LoadLevel(int Index)
+    public static async Task<LevelSO> LoadLevel(int index)
     {
         UnloadLevelIfExists();
-        levelHandle = Addressables.LoadAssetAsync<LevelSO>("Level-" + Index);
-        await levelHandle.Task;
-        
-        currentLevel = levelHandle.Result;
+
+        var handle = Addressables.LoadAssetAsync<LevelSO>($"Level-{index}");
+        await handle.Task;
+
+        if (handle.Status != AsyncOperationStatus.Succeeded || handle.Result == null)
+            return null;
+
+        currentLevel = handle.Result;
         return currentLevel;
     }
 
