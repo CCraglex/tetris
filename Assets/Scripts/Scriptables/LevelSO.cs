@@ -14,7 +14,8 @@ public class LevelSO : ScriptableObject
 
     public float TimePerStep;
     public List<LevelTile> Tiles;
-
+    public TetrisBlockSO TetrisBlockData;
+    
     private const int LevelMinWidth = 6;
 
     private TileBase GetTile(LevelTilepackSO currentPack,string tileName)
@@ -47,23 +48,26 @@ public class LevelSO : ScriptableObject
         => levelWidth > LevelMinWidth ? levelWidth : LevelMinWidth;
     public int GetHeight()
         => levelHeight;
-    public async Task PlaceTiles(Tilemap tilemap)
+    public async Task PlaceTiles()
     {
         LevelTilepackSO Tilepack = await AssetLoader.LoadTilepackSO();
+        Tilemap tilemap = FindAnyObjectByType<Tilemap>();
+
+        await Task.Delay(10);
 
         var wallTile = GetTile(Tilepack,"Wall");
         var wallSpots = GetSpots("Wall");
-        tilemap.SetTiles(
-            wallSpots,
-            wallSpots.Select(_ => wallTile).ToArray()
-        );
+        var wallTiles = wallSpots.Select(_ => wallTile).ToArray();
+
+        foreach (var item in wallSpots)
+            tilemap.SetTile(item,wallTile);
+        
+
 
         var flagTile = GetTile(Tilepack,"Flag");
         var flagSpots = GetSpots("Flag");
-        tilemap.SetTiles(
-            flagSpots,
-            flagSpots.Select(_ => flagTile).ToArray()
-        );
+        foreach (var item in flagSpots)
+            tilemap.SetTile(item,flagTile);
 
         var coinSpots = GetSpots("Coin");
         GameObject.FindAnyObjectByType<CoinHandler>().SpawnCoins(coinSpots);
@@ -80,28 +84,18 @@ public class LevelSO : ScriptableObject
         levelWidth = Mathf.CeilToInt(worldSize.x);
     }
 
-    public Vector2Int[] GetPlayerTiles(out Vector2 spawnPos)
+    public Vector2[] GetPlayerTiles(out Vector2 pivotPoint)
     {
-        // --- FIX 4: enforce exactly one root
-        var roots = GetSpots("PlayerRoot");
-        if (roots.Length != 1)
-            throw new Exception("Level must contain exactly one PlayerRoot tile");
+        pivotPoint = TetrisBlockData.pivot;
+        var spot = GetSpots("PlayerRoot")[0];
 
-        var root = roots[0];
+        Vector2 root = new(spot.x,spot.y);
+        Vector2 spawnPoint = root + pivotPoint;
+        var localTiles = TetrisBlockData.localPositions;
 
-        var playerSpots = GetSpots("Player");
-        Vector2Int rootV2Int = new(root.x, root.y);
-
-        Vector2Int[] retVal = new Vector2Int[playerSpots.Length + 1];
-        for (int i = 0; i < playerSpots.Length; i++)
-        {
-            retVal[i] =
-                new Vector2Int(playerSpots[i].x, playerSpots[i].y)
-                - rootV2Int;
-        }
-
-        spawnPos = rootV2Int;
-        retVal[playerSpots.Length] = Vector2Int.zero;
+        Vector2[] retVal = new Vector2[localTiles.Length];
+        for (int i = 0; i < localTiles.Length; i++)
+            retVal[i] = spawnPoint - pivotPoint + localTiles[i];
 
         return retVal;
     }

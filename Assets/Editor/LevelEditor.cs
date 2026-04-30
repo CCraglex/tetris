@@ -16,6 +16,8 @@ public class LevelEditor : Editor
     private int levelID;
     private int Difficulty = 1;
 
+    [SerializeField] TetrisBlockSO blockToUse;
+
     private List<Vector3Int> GetSpots(Tilemap Tiles,string tileName)
     {
         var level = target as LevelEngine;
@@ -39,15 +41,23 @@ public class LevelEditor : Editor
             throw new InvalidDataException("Difficulty value can't be 0!");
         if(ID < 1)
             throw new InvalidDataException("Level ID can't be lower than 1!");
-        LevelSO newLevel = CreateInstance<LevelSO>();
-        newLevel.TimePerStep = Difficulty;
+        if(blockToUse == null)
+            throw new InvalidDataException("Tetris block can't be null!");
         
         var level = target as LevelEngine;
         var map = level.GetTilemap();
 
+        if(GetSpots(map,"Flag") == null || GetSpots(map,"Flag").Count == 0)
+            throw new InvalidDataException("There needs to be at least one flag tile!");
+        if(GetSpots(map,"PlayerRoot") == null || GetSpots(map,"PlayerRoot").Count == 0)
+            throw new InvalidDataException("There needs to be at least one player root tile!");
+
+        LevelSO newLevel = CreateInstance<LevelSO>();
+        newLevel.TimePerStep = Difficulty;
+        newLevel.TetrisBlockData = blockToUse;
+        
         HandleTile(newLevel,"Wall");
         HandleTile(newLevel,"Flag");
-        HandleTile(newLevel,"Player");
         HandleTile(newLevel,"PlayerRoot");
         HandleTile(newLevel,"Coin");
 
@@ -128,20 +138,29 @@ public class LevelEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        EditorGUILayout.LabelField("Create new level:");
+        EditorGUILayout.LabelField("Create level:");
         EditorGUILayout.LabelField("Current Last Index: " + levelID);
 
+        blockToUse = (TetrisBlockSO)EditorGUILayout.ObjectField(
+            blockToUse,
+            typeof(TetrisBlockSO),
+            false,
+            GUILayout.ExpandWidth(true)
+        );
+        
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Difficulty: (How many steps per second)");
+        EditorGUILayout.LabelField("Difficulty (steps per sec):");
         Difficulty = EditorGUILayout.IntField(Difficulty);
         EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.BeginHorizontal();
         if(GUILayout.Button("Update index"))
             levelID = GetNextID();
 
         if(GUILayout.Button("Create Level"))
             CreateNewLevelAsset(GetNextID());
-        
+        EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.LabelField("Edit existing level:");
 
         EditorGUILayout.BeginHorizontal();

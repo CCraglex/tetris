@@ -50,15 +50,14 @@ public class Menu : MonoBehaviour
 
     public void ReturnToMenuFromLevelSelect()
     {
-        AdService.ShowInterstitial();
         IEnumerator IAction()
         {
+            levelScreen.blocksRaycasts = false;
             SoundService.PlaySound(audios[0],0.35f);
             yield return swapAnimation.DOFade(1, 0.65f).WaitForCompletion();
             yield return new WaitForSeconds(0.75f);
             levelScreen.alpha = 0;
-            levelScreen.blocksRaycasts = false;
-
+            AdService.ShowInterstitial();
             menuScreen.alpha = 1;
             menuScreen.blocksRaycasts = true;
             yield return swapAnimation.DOFade(0, 0.65f).WaitForCompletion();            
@@ -69,6 +68,7 @@ public class Menu : MonoBehaviour
 
     public void LevelButton(string level)
     {
+        levelScreen.blocksRaycasts = false;
         SoundService.PlaySound(audios[0],0.35f);
         levelUtility.OnLevelSelect(int.Parse(level));
     }

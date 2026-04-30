@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GamePlayButtons : MonoBehaviour
 {
+    public Player player;
     public PlayerMovement P;
     public LevelGameplay levelGameplay;
 

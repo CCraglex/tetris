@@ -12,7 +12,6 @@ public class PreBuildCleanup : IPreprocessBuildWithReport
         Debug.Log("Running pre-build cleanup...");
         PlayerPrefs.DeleteAll();
         Time.timeScale = 1f;
-        AssetDatabase.SaveAssets();
         Debug.Log("Pre-build cleanup complete.");
     }
 }

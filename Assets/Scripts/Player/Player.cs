@@ -15,11 +15,12 @@ public class Player : MonoBehaviour
     [SerializeField] private LevelGameplay levelGameplay;
 
     private bool playerActed;
+    public Vector2 pivot;
 
     private void CreateTile(Vector2 spot)
     {
         var tile = Instantiate(tilePrefab, Vector2.zero, Quaternion.identity, transform);
-        tile.transform.localPosition = spot;
+        tile.transform.position = spot;
         tile.GetComponent<SpriteRenderer>().sprite = tileVisual;
     }
 
@@ -32,15 +33,21 @@ public class Player : MonoBehaviour
     public List<Vector2Int> GeneratePlayer()
     {
         ClearTiles();
-        var Data = AssetLoader.GetCurrentLevel().GetPlayerTiles(out Vector2 spawn);
-        transform.position = spawn;
-        transform.rotation = Quaternion.Euler(0,0,0);
-        movement.InitTiles(Data);
-        CreateTile(Vector2.zero);
-        for (int i = 0; i < Data.Length - 1; i++)
-            CreateTile(Data[i]);
+        var Data = AssetLoader.GetCurrentLevel().GetPlayerTiles(out Vector2 p);
+        pivot = p;
         
-        return Data.ToList();
+        transform.position = Data[0] + pivot;
+
+        Vector2Int[] gridData = new Vector2Int[Data.Length];
+
+        for (int i = 0; i < Data.Length; i++)
+        {
+            gridData[i] = new Vector2Int((int)Data[i].x,(int)Data[i].y);
+            CreateTile(gridData[i]);
+        }
+            
+        movement.InitTiles(gridData);
+        return gridData.ToList();
     }
 
     public void StartPlaying()
@@ -60,7 +67,7 @@ public class Player : MonoBehaviour
         
         while (movement.Active)
         {
-            if (collisionHandler.CanLandHere(transform.position))
+            if (collisionHandler.CanLandHere())
             {
                 lockTimer += Time.deltaTime;
 
@@ -72,7 +79,7 @@ public class Player : MonoBehaviour
 
                 if (lockTimer >= timePerStep)
                 {
-                    if(collisionHandler.IsCollidingWith(CollisionTileType.Flag,transform.position,out _))
+                    if(collisionHandler.IsCollidingWith(CollisionTileType.Flag,out _))
                     {
                         levelGameplay.OnPlayerWon();
                         movement.Active = false;

@@ -59,10 +59,11 @@ public class LevelGameplay : MonoBehaviour
         
         StartCoroutine(levelText.IMoveUpward(() => countDown2 = false));
         if (countDown2)
-            yield break;
-        
-        
+            yield break;        
     }
+
+    public void BlockPausing()
+        => pausePanel.isOpen = true;
 
     public void StartPlayingLevel(int levelID)
     {
@@ -71,6 +72,7 @@ public class LevelGameplay : MonoBehaviour
         lastLoadedLevel = levelID;
         StartCoroutine(ICountDown());
         remainingPowerupTime = 0;
+        collectedCashThisRound = 0;
     }
 
     public IEnumerator ActivatePowerup()

@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public bool Active;
-    public bool EnableDebug;
+    public bool EnableDebug;   
 
     [SerializeField] private LevelCollisionHandler collisionHandler;
     [SerializeField] private CoinHandler coinHandler;
@@ -28,15 +28,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if(!Active)
             return false;
-
-        Vector2Int playerPos = new(
-            Mathf.RoundToInt(Player.position.x),
-            Mathf.RoundToInt(Player.position.y)
-        );
        
         foreach (var tile in tiles)
         {
-            Vector2Int pos = playerPos + tile + direction;        
+            Vector2Int pos = tile + direction;        
             if (collisionHandler.wallGridPositions.Contains(pos) || IsTileOutOfBounds(pos.x))
                 return false;
         }
@@ -45,11 +40,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleCoinReward()
     {
-        if(collisionHandler.IsCollidingWith(CollisionTileType.Coin,transform.position,out var positions))
+        if(collisionHandler.IsCollidingWith(CollisionTileType.Coin,out var positions))
         {           
             foreach (var p in positions)
                 coinHandler.RewardCoin(p);
         }
+    }
+
+    private void UpdateCollisionAfterMove()
+    {
+        for (int i = 0; i < playerTiles.Length; i++)
+        {
+            Vector2 pos = transform.GetChild(i).position;
+            playerTiles[i] = new Vector2Int((int)pos.x,(int)pos.y);
+        }
+        collisionHandler.playerTiles = playerTiles.ToList();
+    }
+
+    private void UpdateRotationPos()
+    {
+        for (int i = 0; i < playerTiles.Length; i++)
+            transform.GetChild(i).position = new Vector2(playerTiles[i].x,playerTiles[i].y);
     }
 
     public bool IsTileOutOfBounds(int x)
@@ -77,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
         if (CanMoveDown())
         {
             Player.position += Vector3.down;
+            UpdateCollisionAfterMove();
             SoundService.PlaySound(tickClip,0.08f,-0.15f,0.15f);
         }
             
@@ -88,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
         if(CanMoveLeft())
         {
             Player.position += Vector3.left;
+            UpdateCollisionAfterMove();
             SoundService.PlaySound(tickClip,0.08f,-0.15f,0.15f);
         }
 
@@ -99,69 +112,56 @@ public class PlayerMovement : MonoBehaviour
         if(CanMoveRight())
         {
             Player.position += Vector3.right;
+            UpdateCollisionAfterMove();
             SoundService.PlaySound(tickClip,0.08f,-0.15f,0.15f);
         }
         HandleCoinReward();
     }
 
-    public bool CanRotateLeft(Vector2Int[] tiles,out Vector2Int kick)
-    {
-        List<Vector2Int> modified = tiles
-            .Select(v => new Vector2Int(-v.y,v.x))
-            .ToList();
-        return TryRotatingPlayer(modified.ToArray(),out kick);
-    }
-        
-    public bool CanRotateRight(Vector2Int[] tiles,out Vector2Int kick)
-    {
-        List<Vector2Int> modified = tiles
-            .Select(v => new Vector2Int(v.y,-v.x))
-            .ToList();
-        return TryRotatingPlayer(modified.ToArray(),out kick);
-    }
-    private bool TryRotatingPlayer(Vector2Int[] rotatedTiles,out Vector2Int kickDir)
-    {
-        kickDir = Vector2Int.zero;
-        if(!Active)
-            return false;
-
-        foreach (var kick in DefaultKicks)
-        {
-            kickDir = kick;
-            if (TryMovingPlayer(rotatedTiles, Vector2Int.zero))
-                return true;
-        }
-        return false;
-    }
-
     public void RotateLeft()
     {
         var rotatedTiles = new Vector2Int[playerTiles.Length];
-        for (int i = 0; i < rotatedTiles.Length; i++)
-            rotatedTiles[i] = new Vector2Int(-playerTiles[i].y, playerTiles[i].x);
 
-        if (!CanRotateLeft(rotatedTiles,out Vector2Int kickDir))
+        for (int i = 0; i < rotatedTiles.Length; i++)
+        {
+            Vector3 localPos = transform.GetChild(i).localPosition;
+            Vector3 localRotated = new Vector3(-localPos.y, localPos.x, 0);
+            Vector3 worldPos = transform.TransformPoint(localRotated);
+            rotatedTiles[i] = new Vector2Int(
+                Mathf.RoundToInt(worldPos.x),
+                Mathf.RoundToInt(worldPos.y)
+            );
+        }
+
+        if (!TryMovingPlayer(rotatedTiles,Vector2Int.zero))
             return;
-            
-        transform.position += new Vector3(kickDir.x,kickDir.y,0);
-        transform.Rotate(0, 0, 90);       
+  
         playerTiles = rotatedTiles;
         collisionHandler.playerTiles = playerTiles.ToList();
+        UpdateRotationPos();
     }
 
     public void RotateRight()
     {
         var rotatedTiles = new Vector2Int[playerTiles.Length];
-        for (int i = 0; i < rotatedTiles.Length; i++)
-            rotatedTiles[i] = new Vector2Int(playerTiles[i].y, -playerTiles[i].x);
 
-        if(!CanRotateRight(rotatedTiles,out Vector2Int kickDir))
+        for (int i = 0; i < rotatedTiles.Length; i++)
+        {
+            Vector3 localPos = transform.GetChild(i).localPosition;
+            Vector3 localRotated = new Vector3(localPos.y, -localPos.x, 0);
+            Vector3 worldPos = transform.TransformPoint(localRotated);
+            rotatedTiles[i] = new Vector2Int(
+                Mathf.RoundToInt(worldPos.x),
+                Mathf.RoundToInt(worldPos.y)
+            );
+        }
+
+        if (!TryMovingPlayer(rotatedTiles,Vector2Int.zero))
             return;
-        
-        transform.Rotate(0, 0, -90);
-        transform.position += new Vector3(kickDir.x,kickDir.y,0);
+  
         playerTiles = rotatedTiles;
         collisionHandler.playerTiles = playerTiles.ToList();
+        UpdateRotationPos();
     }
 
     static readonly Vector2Int[] DefaultKicks =
@@ -177,20 +177,20 @@ public class PlayerMovement : MonoBehaviour
         if(EnableDebug == false || playerTiles == null)
             return;
 
-        Gizmos.color = Color.black;
+        Gizmos.color = Color.blue;
         foreach (var item in playerTiles)
-            Gizmos.DrawWireSphere(transform.position + new Vector3(item.x,item.y),0.25f);
+            Gizmos.DrawSphere(new Vector3(item.x,item.y),0.25f);
 
         Gizmos.color = Color.red;
         foreach (var item in collisionHandler.wallGridPositions)
-            Gizmos.DrawWireSphere(new Vector3(item.x,item.y),0.25f);
+            Gizmos.DrawSphere(new Vector3(item.x,item.y),0.25f);
         
         Gizmos.color = Color.yellow;
         foreach (var item in collisionHandler.coinGridPositions)
-            Gizmos.DrawWireSphere(new Vector3(item.x,item.y),0.25f);
+            Gizmos.DrawSphere(new Vector3(item.x,item.y),0.25f);
 
         Gizmos.color = Color.green;
         foreach (var item in collisionHandler.flagGridPositions)
-            Gizmos.DrawWireSphere(new Vector3(item.x,item.y),0.25f);
+            Gizmos.DrawSphere(new Vector3(item.x,item.y),0.25f);
     }
 }

@@ -48,7 +48,8 @@ public static class SoundService
 
     public static void AddChannel()
     {
-        GameObject G = Object.Instantiate(new GameObject("Sound Channel"),ChannelParent);
+        GameObject G = new GameObject("Sound Channel");
+        G.transform.parent = ChannelParent;
         Channels.Enqueue(G.AddComponent<AudioSource>());        
     }
 

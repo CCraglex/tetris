@@ -44,18 +44,13 @@ public class LevelCollisionHandler : MonoBehaviour
         }
     }
 
-    public bool CanLandHere(Vector2 pPos)
+    public bool CanLandHere()
     {
-        Vector2Int playerPos = new(
-            Mathf.RoundToInt(pPos.x),
-            Mathf.RoundToInt(pPos.y)
-        );
-
         var hittingTiles = new List<Vector2Int>();
 
         foreach (var playerTile in playerTiles)
         {
-            Vector2Int lowerTile = playerPos + new Vector2Int(playerTile.x, playerTile.y - 1);
+            Vector2Int lowerTile = new Vector2Int(playerTile.x, playerTile.y - 1);
 
             if (wallGridPositions.Contains(lowerTile))
                 hittingTiles.Add(lowerTile);
@@ -81,17 +76,12 @@ public class LevelCollisionHandler : MonoBehaviour
         }
     }
     
-    public bool IsCollidingWith(CollisionTileType tile, Vector2 pPos, out List<Vector2Int> collisionCells)
+    public bool IsCollidingWith(CollisionTileType tile, out List<Vector2Int> collisionCells)
     {
-        Vector2Int playerPos = new(
-            Mathf.RoundToInt(pPos.x),
-            Mathf.RoundToInt(pPos.y)
-        );
 
         List<Vector2Int> tiles = GetCollisionList(tile);
-
+        
         var cols = playerTiles
-            .Select(pos => playerPos + pos)
             .Where(worldPos => tiles.Contains(worldPos))
             .ToList();
 

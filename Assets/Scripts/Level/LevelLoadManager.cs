@@ -11,7 +11,6 @@ public class LevelLoadManager : MonoBehaviour
 {
     [SerializeField] Tilemap Map;
     [SerializeField] Player Player;
-    [SerializeField] LevelTextHandler levelTextHandler;
     
     [SerializeField] LevelCamera cameraHandler;
     [SerializeField] LevelGameplay levelGameplay;
@@ -21,15 +20,12 @@ public class LevelLoadManager : MonoBehaviour
 
     public async Task CreateLevel(int levelID)
     {   
+        levelGameplay.BlockPausing();
         levelData = await AssetLoader.LoadLevel(levelID);
         Vector3Int[] coinSpots = levelData.GetSpots("Coin");
-        print(coinSpots.Length);
         collisionHandler.UpdateCoins(coinSpots);
-
         await Task.Yield();
-        await levelData.PlaceTiles(Map);
-
-        print("?");
+        await levelData.PlaceTiles();
         collisionHandler.SetupData(Player,levelData);
         cameraHandler.UpdateCameraStats(levelData);
         levelGameplay.lastLoadedLevel = levelID;

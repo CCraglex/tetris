@@ -17,7 +17,7 @@ public static class SaveStateHandler
     public static void Load()
     {
         var fullPath = Application.persistentDataPath + Path;
-
+        Debug.Log("data path" + fullPath);
         if (File.Exists(fullPath))
         {
             string data = File.ReadAllText(fullPath);
@@ -33,7 +33,7 @@ public static class SaveStateHandler
         currentdata = new SaveData
         {
             cash = 10,
-            MaxLevel = 1,
+            MaxLevel = 0,
             upg1Amount = 3,
         };
     }
