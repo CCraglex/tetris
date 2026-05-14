@@ -75,4 +75,7 @@ public class LevelTextHandler : MonoBehaviour
 
     public void HideText()
         => text.color = new(0,0,0,0);
+    
+    public void ResetText()
+        => text.text = "3";
 }

@@ -1,5 +1,8 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Purchasing;
+using UnityEngine.UI;
 
 public class ShopPanel : MonoBehaviour
 {
@@ -46,10 +49,5 @@ public class ShopPanel : MonoBehaviour
         AdService.instance.rewardedCoin.OnClosedAction += AdFail;
         AdService.instance.rewardedCoin.OnFailedAction += AdFail;
         AdService.ShowRewardedCoin();
-    }
-
-    public void BuyButton(int amount)
-    {
-        SaveStateHandler.AddCash(amount);
     }
 }

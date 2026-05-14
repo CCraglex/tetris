@@ -24,14 +24,17 @@ public class GamePlayButtons : MonoBehaviour
     
     public void SkillButton()
     {
-        if(SaveStateHandler.HasPowerup())
+        if(levelGameplay.PausingBlocked())
+            return;
+            
+        if(SaveStateHandler.GetPowerupCount() > 0)
         {
             SaveStateHandler.UsePowerup();
             StartCoroutine(levelGameplay.ActivatePowerup());
             return;
         }
 
-        if (SaveStateHandler.HasCash(30))
+        if (SaveStateHandler.GetCash() > 30)
         {
             SaveStateHandler.RemoveCash(30);
             SaveStateHandler.AddPowerup(3);

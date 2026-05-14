@@ -10,8 +10,6 @@ public class Menu : MonoBehaviour
     public CanvasGroup menuScreen;
     public CanvasGroup gameScreen;
     public CanvasGroup levelScreen;
-
-    public CanvasGroup loadingScreen;
     public CanvasGroup swapAnimation;
 
     [Header("Buttons")]
@@ -30,18 +28,10 @@ public class Menu : MonoBehaviour
     [Header("Components")]
     public TextMeshProUGUI messageText;
     public LevelLoadManager levelLoader;
-    public Transform soundParent;
-    public AdService adHandler;
+    public LevelSelectContent levelSelectContent;
 
-    private void Awake()
+    public void InitMenu()
     {
-        SoundService.Init(soundParent);
-        AdService.Init(adHandler);
-    }
-
-    public void Start()
-    {
-        Application.targetFrameRate = 120;
         menuUtility = new();
         menuUtility.Instance = this;
         menuUtility.PlayMenuIntro();
@@ -55,7 +45,6 @@ public class Menu : MonoBehaviour
         IEnumerator IAction()
         {
             levelScreen.blocksRaycasts = false;
-            SoundService.PlaySound(audios[0],0.35f);
             yield return swapAnimation.DOFade(1, 0.65f).WaitForCompletion();
             yield return new WaitForSeconds(0.75f);
             levelScreen.alpha = 0;
@@ -71,20 +60,19 @@ public class Menu : MonoBehaviour
     public void LevelButton(string level)
     {
         levelScreen.blocksRaycasts = false;
-        SoundService.PlaySound(audios[0],0.35f);
         levelUtility.OnLevelSelect(int.Parse(level));
     }
 
     public void StarButton()
     {
-        Application.OpenURL("www.google.com");
+        Application.OpenURL("https://play.google.com/store/apps/details?id=com.Craglex.Gravitino");
     }
 
     public async void LevelSelectButton()
     {
         AdService.ShowInterstitial();
-        SoundService.PlaySound(audios[0],0.35f);
         swapAnimation.DOFade(1,0.25f);
+        levelSelectContent.UpdateLevels();
 
         await swapAnimation.DOFade(1,0.65f)
             .AsyncWaitForCompletion();
@@ -176,7 +164,7 @@ public class LevelUtility
 
     public async void OnLevelSelect(int Level)
     {
-        await Instance.loadingScreen.DOFade(1,1.25f)
+        await Instance.swapAnimation.DOFade(1,1.25f)
             .AsyncWaitForCompletion();
 
         Instance.levelScreen.alpha = 0;
@@ -187,7 +175,7 @@ public class LevelUtility
 
         await Instance.levelLoader.CreateLevel(Level);
 
-        await Instance.loadingScreen.DOFade(0,1.25f)
+        await Instance.swapAnimation.DOFade(0,1.25f)
             .AsyncWaitForCompletion();
         
         Instance.levelLoader.ReadyLevel(Level);

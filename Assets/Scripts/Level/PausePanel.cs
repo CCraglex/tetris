@@ -47,9 +47,8 @@ public class PausePanel : MonoBehaviour
 
         PlayerPrefs.SetInt("Sfx", v ? 1 : 0);
         PlayerPrefs.Save();
-
+        SoundService.Update();
         sfxImg.sprite = v ? sfxOn : sfxOff;
-        SaveStateHandler.Sfx = v;
     }
 
     public void SetSong()
@@ -59,9 +58,8 @@ public class PausePanel : MonoBehaviour
 
         PlayerPrefs.SetInt("Mus", v ? 1 : 0);
         PlayerPrefs.Save();
-
+        SoundService.Update();
         sfxImg.sprite = v ? sfxOn : sfxOff;
-        SaveStateHandler.Sfx = v;
     }
 
     public void Pause()
@@ -158,12 +156,14 @@ public class PausePanel : MonoBehaviour
             pauseCanvas.alpha = 0;
             gameCanvas.alpha = 1;
             gameCanvas.blocksRaycasts = true;
-
+            
+            gameplay.remainingPowerupTime = 0;
+            gameplay.powerupElement.alpha = 0;
+            gameplay.levelText.ResetText();
             yield return swapCanvas.DOFade(0,0.65f)
                 .WaitForCompletion();
 
             isOpen = false;
-            gameplay.remainingPowerupTime = 0;
             yield return StartCoroutine(gameplay.ICountDown());
         }
 

@@ -14,7 +14,7 @@ public class LevelSelectContent : MonoBehaviour
     [SerializeField] private Transform levelContainer;
     [SerializeField] private GameObject levelButton;
 
-    private IEnumerator Start()
+    private IEnumerator IAction()
     {
         AsyncOperationHandle<IList<IResourceLocation>> handle =
             Addressables.LoadResourceLocationsAsync("Level", typeof(LevelSO));
@@ -34,15 +34,31 @@ public class LevelSelectContent : MonoBehaviour
         float sqr = (totalWidth - (2 * padding) - (spacingX * 4)) / columns;
         g.cellSize = new(sqr,sqr);
 
-        int currentSave = SaveStateHandler.GetMaxLevel();
         for (int i = 0; i < levelCount; i++)
         {
             GameObject ButtonGO = Instantiate(levelButton,levelContainer);
             string level = (i + 1).ToString();
             ButtonGO.GetComponentInChildren<TextMeshProUGUI>().text = level;
-            ButtonGO.GetComponent<Button>().onClick.AddListener(() => menu.LevelButton(level));
-            if(i <= currentSave)
-                ButtonGO.GetComponent<CanvasGroup>().interactable = true;
+            var button = ButtonGO.GetComponent<Button>();
+            button.onClick.AddListener(() => menu.LevelButton(level));
+        }
+        print($"Loaded {levelCount} levels.");
+    }  
+
+    public void Init()
+        => StartCoroutine(IAction());
+
+    public void UpdateLevels()
+    {
+        int currentSave = SaveStateHandler.GetMaxLevel() + 1;
+        print(currentSave);
+
+        for (int i = 0; i < levelContainer.childCount; i++)
+        {
+            var obj = levelContainer.GetChild(i);
+            if(int.Parse(obj.GetComponentInChildren<TextMeshProUGUI>().text) <= currentSave)
+                obj.GetComponent<Button>().interactable = true;
+            else obj.GetComponent<Button>().interactable = false;
         }
     }
 }

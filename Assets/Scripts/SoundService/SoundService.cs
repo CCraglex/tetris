@@ -4,16 +4,20 @@ using UnityEngine;
 public static class SoundService
 {
     private static Queue<AudioSource> Channels;
+    private static AudioSource musicChannel;
 
     public static Transform ChannelParent;
-    private static SoundCoroutineHandler SoundCoroutineHandler;
+    private static SoundServiceMB SoundCoroutineHandler;
 
     public static void Init(Transform Parent,int StartChannelCount = 3)
     {
         Channels = new();
         ChannelParent = Parent;
-        SoundCoroutineHandler = ChannelParent.gameObject.AddComponent<SoundCoroutineHandler>();
+        SoundCoroutineHandler = ChannelParent.GetComponent<SoundServiceMB>();
         CreateChannels(StartChannelCount);
+
+        musicChannel = new GameObject("MusicChannel").AddComponent<AudioSource>();
+        musicChannel.gameObject.transform.SetParent(ChannelParent);
     }
 
     public static void PauseAll()
@@ -88,5 +92,14 @@ public static class SoundService
         res.Play();
 
         SoundCoroutineHandler.StartCoroutine(WaitCompletion(res));
+    }
+
+    public static void Update()
+    {
+        float sfxValue = PlayerPrefs.GetInt("Sfx");
+        foreach (var item in Channels)
+            item.volume = sfxValue;
+        
+        musicChannel.volume = PlayerPrefs.GetInt("Mus");
     }
 }

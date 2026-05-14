@@ -1,11 +1,14 @@
+using System.Collections;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using UnityEngine;
 
 public class GPGSAuth : MonoBehaviour
 {
+    public bool authActionCompleted;
     public GameObject loginButton;
-    public void Start() {
+    public void Auth() {
+        StartCoroutine(ITimeout());
         PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
     }
 
@@ -15,14 +18,26 @@ public class GPGSAuth : MonoBehaviour
             loginButton.SetActive(false);
         } else {
             print(status);
-            // Disable your integration with Play Games Services or show a login button
-            // to ask users to authenticate. Clicking it should call
-            // PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication).
         }
+
+        authActionCompleted = true;
+    }
+
+    private IEnumerator ITimeout()
+    {
+        yield return new WaitForSeconds(3f);
+        authActionCompleted = true;
     }
 
     public void LoginManual()
     {
         PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication);
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        //We only care for loading
+        if(authActionCompleted == false)
+            Time.timeScale = pause ? 0 : 1;
     }
 }

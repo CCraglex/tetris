@@ -19,7 +19,7 @@ public class LevelGameplay : MonoBehaviour
     [SerializeField] private CanvasGroup swapCanvas;
     [SerializeField] private CanvasGroup gameCanvas;
 
-    [SerializeField] private CanvasGroup powerupElement;
+    public CanvasGroup powerupElement;
     [SerializeField] private Image powerupImage;
 
     [SerializeField] private float powerupTimer;
@@ -38,7 +38,7 @@ public class LevelGameplay : MonoBehaviour
 
     private Tween powerupTween;
 
-    private void Start()
+    public void Init()
     {
         skillCountText.text = SaveStateHandler.GetPowerupCount().ToString();
         SaveStateHandler.PowerupChanged += (val) => skillCountText.text = $"{val}";
@@ -64,6 +64,9 @@ public class LevelGameplay : MonoBehaviour
 
     public void BlockPausing()
         => pausePanel.isOpen = true;
+    
+    public bool PausingBlocked()
+        => pausePanel.isOpen;
 
     public void StartPlayingLevel(int levelID)
     {
@@ -102,7 +105,7 @@ public class LevelGameplay : MonoBehaviour
         while(remainingPowerupTime > 0 && powerupTween.IsPlaying())
         {
             yield return null;
-            if(pausePanel.isOpen || countDown1)
+            if(PausingBlocked() || countDown1)
                 continue;
 
             remainingPowerupTime -= Time.deltaTime;
@@ -131,6 +134,7 @@ public class LevelGameplay : MonoBehaviour
         {
             pausePanel.isOpen = true;
             SaveStateHandler.FinishLevel(lastLoadedLevel);
+            
             yield return StartCoroutine(hypeText.PlayWin());
             gameCanvas.blocksRaycasts = false;
 

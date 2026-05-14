@@ -73,7 +73,7 @@ public class CoinHandler : MonoBehaviour
         SoundService.PlaySound(coinClip,0.5f,0.05f);
     }
 
-    private void Awake()
+    public void Init()
     {
         CreateCoins();
         ActiveCoins = new();
